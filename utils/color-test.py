@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """
 print(the output of colormath's cie2000 vs our cie2000.  This was
