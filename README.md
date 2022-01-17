@@ -1,3 +1,15 @@
+# Fork rubiks-color-resolver
+
+## python3 install
+```
+$ sudo python3 -m pip install git+https://github.com/lidacity/rubiks-color-resolver.git
+```
+
+## Changed
+- formatting #RGB Input# in report
+
+
+
 # rubiks-color-resolver
 
 ## python3 install
