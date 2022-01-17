@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from rubikscolorresolver import resolve_colors
+from rubiks_color_resolver import resolve_colors
 import logging
 import sys
 

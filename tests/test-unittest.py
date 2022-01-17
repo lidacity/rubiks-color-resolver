@@ -1,9 +1,9 @@
 
-from rubikscolorresolver.base import (
+from rubiks_color_resolver.base import (
     get_swap_count,
     rgb2lab,
 )
-from rubikscolorresolver import (
+from rubiks_color_resolver import (
     hex_to_rgb,
     median,
 )
@@ -11,9 +11,6 @@ import logging
 import unittest
 import sys
 
-
-def is_micropython():
-    return sys.implementation.name == "micropython"
 
 
 log = logging.getLogger(__name__)
@@ -79,66 +76,6 @@ class TestRGB2Lab(unittest.TestCase):
         self.assertAlmostEqual(lab.a, -2.1385958505868996, places=15)
         self.assertEqual(lab.b, -10.57740141476744)
 
-
-'''
-if not is_micropython():
-    from rubikscolorresolver import get_lab_distance
-
-    class TestDeltaCIE2000(unittest.TestCase):
-        def test_246_251_252_vs_246_251_252(self):
-            lab1 = rgb2lab((246, 251, 252))
-            lab2 = rgb2lab((246, 251, 252))
-            delta_e = get_lab_distance(lab1, lab2)
-            self.assertEqual(delta_e, 0.0)
-
-        def test_246_251_252_vs_246_252_244(self):
-            lab1 = rgb2lab((246, 251, 252))
-            lab2 = rgb2lab((246, 252, 244))
-            delta_e = get_lab_distance(lab1, lab2)
-            self.assertEqual(delta_e, 4.542365412787316)
-
-        def test_246_251_252_vs_252_239_233(self):
-            lab1 = rgb2lab((246, 251, 252))
-            lab2 = rgb2lab((252, 239, 233))
-            delta_e = get_lab_distance(lab1, lab2)
-            self.assertEqual(delta_e, 8.426848779294376)
-
-        def test_246_251_252_vs_245_251_251(self):
-            lab1 = rgb2lab((246, 251, 252))
-            lab2 = rgb2lab((245, 251, 251))
-            delta_e = get_lab_distance(lab1, lab2)
-            self.assertEqual(delta_e, 0.7813864942463158)
-
-        def test_246_251_252_vs_44_253_226(self):
-            lab1 = rgb2lab((246, 251, 252))
-            lab2 = rgb2lab((44, 253, 226))
-            delta_e = get_lab_distance(lab1, lab2)
-            self.assertAlmostEqual(delta_e, 24.822982091447646, places=14)
-
-        def test_246_251_252_vs_19_139_252(self):
-            lab1 = rgb2lab((246, 251, 252))
-            lab2 = rgb2lab((19, 139, 252))
-            delta_e = get_lab_distance(lab1, lab2)
-            self.assertEqual(delta_e, 37.52845963685855)
-
-        def test_246_251_252_vs_216_28_58(self):
-            lab1 = rgb2lab((246, 251, 252))
-            lab2 = rgb2lab((216, 28, 58))
-            delta_e = get_lab_distance(lab1, lab2)
-            self.assertEqual(delta_e, 47.365942322242205)
-
-        def test_246_251_252_vs_245_252_226(self):
-            lab1 = rgb2lab((246, 251, 252))
-            lab2 = rgb2lab((245, 252, 226))
-            delta_e = get_lab_distance(lab1, lab2)
-            self.assertEqual(delta_e, 11.299071631909156)
-
-        def test_246_251_252_vs_49_249_220(self):
-            lab1 = rgb2lab((246, 251, 252))
-            lab2 = rgb2lab((49, 249, 220))
-            delta_e = get_lab_distance(lab1, lab2)
-            self.assertEqual(delta_e, 24.96260521154151)
-'''
 
 
 class TestMedian(unittest.TestCase):

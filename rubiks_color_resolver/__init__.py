@@ -3,7 +3,7 @@ import array
 import gc
 import os
 from math import sqrt
-from rubikscolorresolver.base import (
+from rubiks_color_resolver.base import (
     LabColor,
     RubiksColorSolverGenericBase,
     Square,
@@ -11,31 +11,24 @@ from rubikscolorresolver.base import (
     html_color,
     rgb2lab,
 )
-from rubikscolorresolver.tsp_solver_greedy import solve_tsp
-from rubikscolorresolver.permutations import (
+from rubiks_color_resolver.tsp_solver_greedy import solve_tsp
+from rubiks_color_resolver.permutations import (
     even_cube_center_color_permutations,
     len_even_cube_center_color_permutations,
     odd_cube_center_color_permutations,
 )
-#from rubikscolorresolver.profile import timed_function, print_profile_data
+#from rubiks_color_resolver.profile import timed_function, print_profile_data
 import sys
 
 if sys.version_info < (3, 4):
     raise SystemError("Must be using Python 3.4 or higher")
 
 
-def is_micropython():
-    return sys.implementation.name == "micropython"
-
 ALL_COLORS = ("Bu", "Gr", "OR", "Rd", "Wh", "Ye")
 SIDES_COUNT = 6
 
-if is_micropython():
-    from ucollections import OrderedDict
-    HTML_FILENAME = "rubiks-color-resolver.html"
-else:
-    from collections import OrderedDict
-    HTML_FILENAME = "/tmp/rubiks-color-resolver.html"
+from collections import OrderedDict
+HTML_FILENAME = "rubiks-color-resolver.html"
 
 try:
     os.unlink(HTML_FILENAME)
@@ -1274,13 +1267,7 @@ $(document).ready(function()
         # to be much brighter/darker than all squares of the same color
         use_center_squares = False
         use_corner_squares = False
-        use_all_squares = False
-
-        # LEGO SPIKE (micropython) has very little memory so only do TSP on the corners
-        if is_micropython():
-            use_corner_squares = True
-        else:
-            use_all_squares = True
+        use_all_squares = True
 
         if use_center_squares:
             center_squares = []
@@ -1332,17 +1319,17 @@ $(document).ready(function()
             edge_pairs = []
 
             if self.width == 2:
-                from rubikscolorresolver.cube_222 import corner_tuples
+                from rubiks_color_resolver.cube_222 import corner_tuples
             elif self.width == 3:
-                from rubikscolorresolver.cube_333 import corner_tuples
+                from rubiks_color_resolver.cube_333 import corner_tuples
             elif self.width == 4:
-                from rubikscolorresolver.cube_444 import corner_tuples
+                from rubiks_color_resolver.cube_444 import corner_tuples
             elif self.width == 5:
-                from rubikscolorresolver.cube_555 import corner_tuples
+                from rubiks_color_resolver.cube_555 import corner_tuples
             elif self.width == 6:
-                from rubikscolorresolver.cube_666 import corner_tuples
+                from rubiks_color_resolver.cube_666 import corner_tuples
             elif self.width == 7:
-                from rubikscolorresolver.cube_777 import corner_tuples
+                from rubiks_color_resolver.cube_777 import corner_tuples
 
             corners = []
 
@@ -1484,17 +1471,17 @@ $(document).ready(function()
         ]
 
         if self.width == 2:
-            from rubikscolorresolver.cube_222 import corner_tuples
+            from rubiks_color_resolver.cube_222 import corner_tuples
         elif self.width == 3:
-            from rubikscolorresolver.cube_333 import corner_tuples
+            from rubiks_color_resolver.cube_333 import corner_tuples
         elif self.width == 4:
-            from rubikscolorresolver.cube_444 import corner_tuples
+            from rubiks_color_resolver.cube_444 import corner_tuples
         elif self.width == 5:
-            from rubikscolorresolver.cube_555 import corner_tuples
+            from rubiks_color_resolver.cube_555 import corner_tuples
         elif self.width == 6:
-            from rubikscolorresolver.cube_666 import corner_tuples
+            from rubiks_color_resolver.cube_666 import corner_tuples
         elif self.width == 7:
-            from rubikscolorresolver.cube_777 import corner_tuples
+            from rubiks_color_resolver.cube_777 import corner_tuples
 
         corners = []
 
@@ -1528,15 +1515,15 @@ $(document).ready(function()
         if self.width == 2:
             return
         elif self.width == 3:
-            from rubikscolorresolver.cube_333 import edge_orbit_id
+            from rubiks_color_resolver.cube_333 import edge_orbit_id
         elif self.width == 4:
-            from rubikscolorresolver.cube_444 import edge_orbit_id
+            from rubiks_color_resolver.cube_444 import edge_orbit_id
         elif self.width == 5:
-            from rubikscolorresolver.cube_555 import edge_orbit_id
+            from rubiks_color_resolver.cube_555 import edge_orbit_id
         elif self.width == 6:
-            from rubikscolorresolver.cube_666 import edge_orbit_id
+            from rubiks_color_resolver.cube_666 import edge_orbit_id
         elif self.width == 7:
-            from rubikscolorresolver.cube_777 import edge_orbit_id
+            from rubiks_color_resolver.cube_777 import edge_orbit_id
 
         white = Square(None, "Wh", self.color_box["Wh"].red, self.color_box["Wh"].green, self.color_box["Wh"].blue)
         yellow = Square(None, "Ye", self.color_box["Ye"].red, self.color_box["Ye"].green, self.color_box["Ye"].blue)
@@ -1634,15 +1621,15 @@ $(document).ready(function()
         if self.width == 2:
             return
         elif self.width == 3:
-            from rubikscolorresolver.cube_333 import center_groups
+            from rubiks_color_resolver.cube_333 import center_groups
         elif self.width == 4:
-            from rubikscolorresolver.cube_444 import center_groups
+            from rubiks_color_resolver.cube_444 import center_groups
         elif self.width == 5:
-            from rubikscolorresolver.cube_555 import center_groups
+            from rubiks_color_resolver.cube_555 import center_groups
         elif self.width == 6:
-            from rubikscolorresolver.cube_666 import center_groups
+            from rubiks_color_resolver.cube_666 import center_groups
         elif self.width == 7:
-            from rubikscolorresolver.cube_777 import center_groups
+            from rubiks_color_resolver.cube_777 import center_groups
 
         for (desc, centers_squares) in center_groups:
             #log.debug("\n\n\n\n")

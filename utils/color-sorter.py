@@ -8,7 +8,7 @@ Against Rubiks cube RGB values
 I skipped hilbert, that one was more trouble than it was worth
 """
 
-from rubikscolorresolver import k_means_colors_dictionary
+from rubiks_color_resolver import k_means_colors_dictionary
 from sklearn.cluster import KMeans
 from copy import deepcopy
 from scipy.spatial import distance

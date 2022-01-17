@@ -15,7 +15,7 @@ import subprocess
 lego_colors = []
 
 with open(
-    "/Users/ddwalton/rubiks-cube/rubiks-color-resolver/test-data/6x6x6-random-02.txt",
+    "~/rubiks-cube/rubiks-color-resolver/test-data/6x6x6-random-02.txt",
     "r",
 ) as fh:
     lego_colors.extend(list(json.load(fh).values()))

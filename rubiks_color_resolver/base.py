@@ -1,5 +1,5 @@
 
-#from rubikscolorresolver.profile import timed_function
+#from rubiks_color_resolver.profile import timed_function
 from math import ceil, sqrt
 import sys
 
@@ -7,15 +7,8 @@ if sys.version_info < (3, 4):
     raise SystemError("Must be using Python 3.4 or higher")
 
 
-def is_micropython():
-    return sys.implementation.name == "micropython"
-
-
-if is_micropython():
-    from ucollections import OrderedDict
-else:
-    from collections import OrderedDict
-    from rubikscolorresolver.cie2000 import lab_distance_cie2000
+from collections import OrderedDict
+from rubiks_color_resolver.cie2000 import lab_distance_cie2000
 
 
 # @timed_function
@@ -28,13 +21,7 @@ def lab_distance(lab1, lab2):
     distance, Euclidean space becomes a metric space. The associated norm is called
     the Euclidean norm.
     """
-
-    if is_micropython():
-        # CIE2000 takes much more CPU so use euclidean when on micropython
-        # Use int instead of float to save a little memory
-        return int(sqrt(((lab1.L - lab2.L) ** 2) + ((lab1.a - lab2.a) ** 2) + ((lab1.b - lab2.b) ** 2)))
-    else:
-        return lab_distance_cie2000(lab1, lab2)
+    return lab_distance_cie2000(lab1, lab2)
 
 
 html_color = {
@@ -636,17 +623,17 @@ class RubiksColorSolverGenericBase(object):
     def validate_edge_orbit(self, orbit_id):
 
         if self.width == 2:
-            from rubikscolorresolver.cube_333 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
         elif self.width == 3:
-            from rubikscolorresolver.cube_333 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
         elif self.width == 4:
-            from rubikscolorresolver.cube_444 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_444 import edge_orbit_wing_pairs
         elif self.width == 5:
-            from rubikscolorresolver.cube_555 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_555 import edge_orbit_wing_pairs
         elif self.width == 6:
-            from rubikscolorresolver.cube_666 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_666 import edge_orbit_wing_pairs
         elif self.width == 7:
-            from rubikscolorresolver.cube_777 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_777 import edge_orbit_wing_pairs
 
         valid = True
 
@@ -690,17 +677,17 @@ class RubiksColorSolverGenericBase(object):
         blue_yellow_corners = []
 
         if self.width == 2:
-            from rubikscolorresolver.cube_222 import corner_tuples
+            from rubiks_color_resolver.cube_222 import corner_tuples
         elif self.width == 3:
-            from rubikscolorresolver.cube_333 import corner_tuples
+            from rubiks_color_resolver.cube_333 import corner_tuples
         elif self.width == 4:
-            from rubikscolorresolver.cube_444 import corner_tuples
+            from rubiks_color_resolver.cube_444 import corner_tuples
         elif self.width == 5:
-            from rubikscolorresolver.cube_555 import corner_tuples
+            from rubiks_color_resolver.cube_555 import corner_tuples
         elif self.width == 6:
-            from rubikscolorresolver.cube_666 import corner_tuples
+            from rubiks_color_resolver.cube_666 import corner_tuples
         elif self.width == 7:
-            from rubikscolorresolver.cube_777 import corner_tuples
+            from rubiks_color_resolver.cube_777 import corner_tuples
 
         for corner_tuple in corner_tuples:
             corner_colors = []
@@ -733,17 +720,17 @@ class RubiksColorSolverGenericBase(object):
     def find_edges_by_color(self, orbit_id):
 
         if self.width == 2:
-            from rubikscolorresolver.cube_333 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
         elif self.width == 3:
-            from rubikscolorresolver.cube_333 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
         elif self.width == 4:
-            from rubikscolorresolver.cube_444 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_444 import edge_orbit_wing_pairs
         elif self.width == 5:
-            from rubikscolorresolver.cube_555 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_555 import edge_orbit_wing_pairs
         elif self.width == 6:
-            from rubikscolorresolver.cube_666 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_666 import edge_orbit_wing_pairs
         elif self.width == 7:
-            from rubikscolorresolver.cube_777 import edge_orbit_wing_pairs
+            from rubiks_color_resolver.cube_777 import edge_orbit_wing_pairs
 
         green_red_orange_color_names = ("Gr", "Rd", "OR")
         blue_red_orange_color_names = ("Bu", "Rd", "OR")
@@ -928,11 +915,11 @@ class RubiksColorSolverGenericBase(object):
     def get_high_low_per_edge_color(self, target_orbit_id):
 
         if self.width == 4:
-            from rubikscolorresolver.cube_444 import edge_orbit_wing_pairs, highlow_edge_values
+            from rubiks_color_resolver.cube_444 import edge_orbit_wing_pairs, highlow_edge_values
         elif self.width == 5:
-            from rubikscolorresolver.cube_555 import edge_orbit_wing_pairs, highlow_edge_values
+            from rubiks_color_resolver.cube_555 import edge_orbit_wing_pairs, highlow_edge_values
         elif self.width == 6:
-            from rubikscolorresolver.cube_666 import edge_orbit_wing_pairs, highlow_edge_values
+            from rubiks_color_resolver.cube_666 import edge_orbit_wing_pairs, highlow_edge_values
         else:
             raise Exception("Add support for %sx%sx%s" % (self.width, self.width, self.width))
 

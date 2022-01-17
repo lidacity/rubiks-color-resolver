@@ -4,7 +4,7 @@ https://github.com/dmishin/tsp-solver/blob/master/tsp_solver/greedy.py
 """
 
 from array import array as pyarray
-# from rubikscolorresolver.profile import timed_function
+# from rubiks_color_resolver.profile import timed_function
 
 
 # @timed_function

@@ -8,8 +8,8 @@ used once upon a time to verify that our cie2000 is working.
 from colormath.color_objects import sRGBColor, LabColor
 from colormath.color_diff import delta_e_cie2000, delta_e_cie1994, delta_e_cie1976
 from colormath.color_conversions import convert_color
-from rubikscolorresolver import delta_e_cie2000 as my_delta_e_cie2000
-from rubikscolorresolver import rgb2lab
+from rubiks_color_resolver import delta_e_cie2000 as my_delta_e_cie2000
+from rubiks_color_resolver import rgb2lab
 
 
 def rgb_to_labcolor(red, green, blue):

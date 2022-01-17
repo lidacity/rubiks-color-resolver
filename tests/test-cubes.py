@@ -4,7 +4,7 @@ except ImportError:
     from ujson import load as json_load
 
 from math import sqrt
-from rubikscolorresolver import RubiksColorSolverGeneric
+from rubiks_color_resolver import RubiksColorSolverGeneric
 import gc
 import logging
 

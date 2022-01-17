@@ -6,59 +6,25 @@ profile_stats_time_including_children = {}
 profile_stats_calls = {}
 timed_function_stack = []
 
-if sys.implementation.name == "micropython":
-    import utime
+#import time
 
-    def timed_function(f, *args, **kwargs):
-        myname = str(f).split(' ')[1]
+def timed_function(f, *args, **kwargs):
+    #myname = str(f).split(' ')[1]
 
-        def new_func(*args, **kwargs):
-            t0 = utime.ticks_us()
-            timed_function_stack.append(myname)
-            result = f(*args, **kwargs)
+    def new_func(*args, **kwargs):
+        #t = utime.ticks_us()
+        result = f(*args, **kwargs)
 
-            if myname not in profile_stats_time_including_children:
-                profile_stats_time_including_children[myname] = 0
-                profile_stats_calls[myname] = 0
+        #if myname not in profile_stats_time_including_children:
+        #    profile_stats_time_including_children[myname] = 0
+        #    profile_stats_calls[myname] = 0
 
-            t1 = utime.ticks_us()
-            delta_us = utime.ticks_diff(t1, t0)
-            profile_stats_time_including_children[myname] += delta_us
-            profile_stats_calls[myname] += 1
+        #profile_stats_time_including_children[myname] += utime.ticks_diff(utime.ticks_us(), t)
+        #profile_stats_calls[myname] += 1
 
-            if len(timed_function_stack) >= 2:
-                stack_last_two = tuple(timed_function_stack[-2:])
+        return result
 
-                if stack_last_two not in stack_history:
-                    stack_history[stack_last_two] = 0
-                stack_history[stack_last_two] += delta_us
-
-            timed_function_stack.pop()
-
-            return result
-
-        return new_func
-
-else:
-    #import time
-
-    def timed_function(f, *args, **kwargs):
-        #myname = str(f).split(' ')[1]
-
-        def new_func(*args, **kwargs):
-            #t = utime.ticks_us()
-            result = f(*args, **kwargs)
-
-            #if myname not in profile_stats_time_including_children:
-            #    profile_stats_time_including_children[myname] = 0
-            #    profile_stats_calls[myname] = 0
-
-            #profile_stats_time_including_children[myname] += utime.ticks_diff(utime.ticks_us(), t)
-            #profile_stats_calls[myname] += 1
-
-            return result
-
-        return new_func
+    return new_func
 
 
 def get_time_to_subtract(function):

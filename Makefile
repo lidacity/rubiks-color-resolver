@@ -4,11 +4,6 @@ init:
 	@./venv/bin/python3 -m pip install -e .
 
 install:
-	micropython -m upip install micropython-array
-	micropython -m upip install micropython-logging
-	micropython -m upip install micropython-os
-	micropython -m upip install micropython-unittest
-	cp -r rubikscolorresolver/ /usr/lib/micropython
 	python3 setup.py install
 
 clean:
@@ -17,9 +12,7 @@ clean:
 
 test:
 	python3 ./tests/test-unittest.py
-	micropython ./tests/test-unittest.py
 	python3 ./tests/test-cubes.py
-	micropython ./tests/test-cubes.py
 
 checks: black-check lint-check   ## Run all checks (black, lint)
 

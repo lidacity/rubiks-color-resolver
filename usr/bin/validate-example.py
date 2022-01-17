@@ -1,11 +1,11 @@
-#!/usr/bin/env micropython
+#!/usr/bin/env python
 
 """
 This is an example of how to use RubiksColorSolverGenericBase to
 determine if the state of your cube is valid
 """
 
-from rubikscolorresolver.base import RubiksColorSolverGenericBase
+from rubiks_color_resolver.base import RubiksColorSolverGenericBase
 
 cube = RubiksColorSolverGenericBase(3)
 cube.enter_cube_state("FFBFUBFBBUDDURDUUDRLLRFLRRLBBFBDFBFFUDDULDUUDLRRLBRLLR")

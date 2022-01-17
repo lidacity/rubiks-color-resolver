@@ -6,28 +6,22 @@ $ sudo python3 -m pip install git+https://github.com/lidacity/rubiks-color-resol
 ```
 
 ## Changed
-- formatting #RGB Input# in report
+- formatting 'RGB Input' in report
+- rename packagename
+- remove micropython-support (sorry)
+- support only rubik's cube 3x3x3
 
 
 
-# rubiks-color-resolver
+# Original rubiks-color-resolver
 
 ## python3 install
 ```
 $ sudo python3 -m pip install git+https://github.com/dwalton76/rubiks-color-resolver.git
 ```
 
-## micropython install
-
-First [install micropython](https://github.com/micropython/micropython/wiki/Getting-Started) then:
-```
-$ git clone https://github.com/dwalton76/rubiks-color-resolver.git
-$ cd rubiks-color-resolver
-$ sudo make install
-```
-
 ## Overview
-rubiks-color-resolver.py and rubiks-color-resolver-micropython.py
+rubiks-color-resolver.py
 - accept a JSON string of RGB values for each square of a rubik'ss cube. 2x2x2, 3x3x3, 4x4x4, 5x5x5, 6x6x6 and 7x7x7 are supported.
 - analyzes all RGB values to assign each square one of the six colors of the cube. It then uses a Travelling Salesman algorithm (tsp_solver) to sort the colors.
 
