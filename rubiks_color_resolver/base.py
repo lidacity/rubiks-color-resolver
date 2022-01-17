@@ -26,44 +26,44 @@ def lab_distance(lab1, lab2):
 
 
 html_color = {
-    "Gr": {"red": 0, "green": 102, "blue": 0},
-    "Bu": {"red": 0, "green": 0, "blue": 153},
-    "OR": {"red": 255, "green": 153, "blue": 0},
-    "Rd": {"red": 204, "green": 51, "blue": 0},
-    "Wh": {"red": 255, "green": 255, "blue": 255},
-    "Ye": {"red": 255, "green": 255, "blue": 0},
+    "G": {"red": 0, "green": 102, "blue": 0},
+    "B": {"red": 0, "green": 0, "blue": 153},
+    "O": {"red": 255, "green": 153, "blue": 0},
+    "R": {"red": 204, "green": 51, "blue": 0},
+    "W": {"red": 255, "green": 255, "blue": 255},
+    "Y": {"red": 255, "green": 255, "blue": 0},
 }
 
 
 edge_color_pair_map = {
     # Up (white)
-    "Gr/Wh": "Gr/Wh",
-    "Wh/Gr": "Gr/Wh",
-    "Bu/Wh": "Bu/Wh",
-    "Wh/Bu": "Bu/Wh",
-    "OR/Wh": "OR/Wh",
-    "Wh/OR": "OR/Wh",
-    "Rd/Wh": "Rd/Wh",
-    "Wh/Rd": "Rd/Wh",
+    "G/W": "G/W",
+    "W/G": "G/W",
+    "B/W": "B/W",
+    "W/B": "B/W",
+    "O/W": "O/W",
+    "W/O": "O/W",
+    "R/W": "R/W",
+    "W/R": "R/W",
     # Left (orange)
-    "Gr/OR": "Gr/OR",
-    "OR/Gr": "Gr/OR",
-    "Bu/OR": "Bu/OR",
-    "OR/Bu": "Bu/OR",
+    "G/O": "G/O",
+    "O/G": "G/O",
+    "B/O": "B/O",
+    "O/B": "B/O",
     # Right (red)
-    "Gr/Rd": "Gr/Rd",
-    "Rd/Gr": "Gr/Rd",
-    "Bu/Rd": "Bu/Rd",
-    "Rd/Bu": "Bu/Rd",
+    "G/R": "G/R",
+    "R/G": "G/R",
+    "B/R": "B/R",
+    "R/B": "B/R",
     # Down (yellow)
-    "Gr/Ye": "Gr/Ye",
-    "Ye/Gr": "Gr/Ye",
-    "Bu/Ye": "Bu/Ye",
-    "Ye/Bu": "Bu/Ye",
-    "OR/Ye": "OR/Ye",
-    "Ye/OR": "OR/Ye",
-    "Rd/Ye": "Rd/Ye",
-    "Ye/Rd": "Rd/Ye",
+    "G/Y": "G/Y",
+    "Y/G": "G/Y",
+    "B/Y": "B/Y",
+    "Y/B": "B/Y",
+    "O/Y": "O/Y",
+    "Y/O": "O/Y",
+    "R/Y": "R/Y",
+    "Y/R": "R/Y",
 }
 
 
@@ -522,25 +522,25 @@ class RubiksColorSolverGenericBase(object):
             raise Exception("Add support for order %s" % order)
 
         self.color_to_side_name = {
-            "Wh": "U",
-            "OR": "L",
-            "Gr": "F",
-            "Rd": "R",
-            "Bu": "B",
-            "Ye": "D",
+            "W": "U",
+            "O": "L",
+            "G": "F",
+            "R": "R",
+            "B": "B",
+            "Y": "D",
         }
 
         side_name_to_color = {
-            "U" : "Wh",
-            "L" : "OR",
-            "F" : "Gr",
-            "R" : "Rd",
-            "B" : "Bu",
-            "D" : "Ye",
+            "U" : "W",
+            "L" : "O",
+            "F" : "G",
+            "R" : "R",
+            "B" : "B",
+            "D" : "Y",
         }
 
-        self.orange_baseline = rgb2lab((html_color["OR"]["red"], html_color["OR"]["green"], html_color["OR"]["blue"]))
-        self.red_baseline = rgb2lab((html_color["Rd"]["red"], html_color["Rd"]["green"], html_color["Rd"]["blue"]))
+        self.orange_baseline = rgb2lab((html_color["O"]["red"], html_color["O"]["green"], html_color["O"]["blue"]))
+        self.red_baseline = rgb2lab((html_color["R"]["red"], html_color["R"]["green"], html_color["R"]["blue"]))
 
         for position in range(1, (self.squares_per_side*6) + 1):
             side_name = state[position-1]
@@ -561,20 +561,20 @@ class RubiksColorSolverGenericBase(object):
         for x in range(3 * self.height):
             data.append([])
 
-        color_codes = {"OR": 90, "Rd": 91, "Gr": 92, "Ye": 93, "Bu": 94, "Wh": 97}
+        color_codes = {"O": 90, "R": 91, "G": 92, "Y": 93, "B": 94, "W": 97}
 
         for side_name in self.side_order:
             side = self.sides[side_name]
 
             if side_name == "U":
                 line_number = 0
-                prefix = (" " * self.width * 3) + " "
+                prefix = (" " * self.width * 2) + " "
             elif side_name in ("L", "F", "R", "B"):
                 line_number = self.width
                 prefix = ""
             else:
                 line_number = self.width * 2
-                prefix = (" " * self.width * 3) + " "
+                prefix = (" " * self.width * 2) + " "
 
             # rows
             for y in range(self.width):
@@ -669,16 +669,16 @@ class RubiksColorSolverGenericBase(object):
                 #corner_colors.add(square.color_name)
                 corner_colors.append(self.pos2square[position].color_name)
 
-            if "Gr" in corner_colors:
-                if "Wh" in corner_colors:
+            if "G" in corner_colors:
+                if "W" in corner_colors:
                     green_white_corners.append(corner_tuple)
-                elif "Ye" in corner_colors:
+                elif "Y" in corner_colors:
                     green_yellow_corners.append(corner_tuple)
 
-            elif "Bu" in corner_colors:
-                if "Wh" in corner_colors:
+            elif "B" in corner_colors:
+                if "W" in corner_colors:
                     blue_white_corners.append(corner_tuple)
-                elif "Ye" in corner_colors:
+                elif "Y" in corner_colors:
                     blue_yellow_corners.append(corner_tuple)
 
         return (
@@ -693,10 +693,10 @@ class RubiksColorSolverGenericBase(object):
 
         from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
 
-        green_red_orange_color_names = ("Gr", "Rd", "OR")
-        blue_red_orange_color_names = ("Bu", "Rd", "OR")
-        white_red_orange_color_names = ("Wh", "Rd", "OR")
-        yellow_red_orange_color_names = ("Ye", "Rd", "OR")
+        green_red_orange_color_names = ("G", "R", "O")
+        blue_red_orange_color_names = ("B", "R", "O")
+        white_red_orange_color_names = ("W", "R", "O")
+        yellow_red_orange_color_names = ("Y", "R", "O")
         green_red_or_orange_edges = []
         blue_red_or_orange_edges = []
         white_red_or_orange_edges = []
@@ -710,7 +710,7 @@ class RubiksColorSolverGenericBase(object):
                 square.color_name in green_red_orange_color_names
                 and partner.color_name in green_red_orange_color_names
             ):
-                if square.color_name == "Gr":
+                if square.color_name == "G":
                     green_red_or_orange_edges.append((square, partner))
                 else:
                     green_red_or_orange_edges.append((partner, square))
@@ -719,7 +719,7 @@ class RubiksColorSolverGenericBase(object):
                 square.color_name in blue_red_orange_color_names
                 and partner.color_name in blue_red_orange_color_names
             ):
-                if square.color_name == "Bu":
+                if square.color_name == "B":
                     blue_red_or_orange_edges.append((square, partner))
                 else:
                     blue_red_or_orange_edges.append((partner, square))
@@ -728,7 +728,7 @@ class RubiksColorSolverGenericBase(object):
                 square.color_name in white_red_orange_color_names
                 and partner.color_name in white_red_orange_color_names
             ):
-                if square.color_name == "Wh":
+                if square.color_name == "W":
                     white_red_or_orange_edges.append((square, partner))
                 else:
                     white_red_or_orange_edges.append((partner, square))
@@ -737,7 +737,7 @@ class RubiksColorSolverGenericBase(object):
                 square.color_name in yellow_red_orange_color_names
                 and partner.color_name in yellow_red_orange_color_names
             ):
-                if square.color_name == "Ye":
+                if square.color_name == "Y":
                     yellow_red_or_orange_edges.append((square, partner))
                 else:
                     yellow_red_or_orange_edges.append((partner, square))
@@ -757,16 +757,16 @@ class RubiksColorSolverGenericBase(object):
         def fix_orange_vs_red_for_color(target_color, target_color_red_or_orange_edges):
 
             if len(target_color_red_or_orange_edges) == 2:
-                red_orange_permutations = (("OR", "Rd"), ("Rd", "OR"))
+                red_orange_permutations = (("O", "R"), ("R", "O"))
             elif len(target_color_red_or_orange_edges) == 4:
                 # 4!/(2!*2!) = 6
                 red_orange_permutations = (
-                    ("OR", "OR", "Rd", "Rd"),
-                    ("OR", "Rd", "OR", "Rd"),
-                    ("OR", "Rd", "Rd", "OR"),
-                    ("Rd", "Rd", "OR", "OR"),
-                    ("Rd", "OR", "Rd", "OR"),
-                    ("Rd", "OR", "OR", "Rd"),
+                    ("O", "O", "R", "R"),
+                    ("O", "R", "O", "R"),
+                    ("O", "R", "R", "O"),
+                    ("R", "R", "O", "O"),
+                    ("R", "O", "R", "O"),
+                    ("R", "O", "O", "R"),
                 )
             else:
                 raise Exception(
@@ -783,9 +783,9 @@ class RubiksColorSolverGenericBase(object):
                 for (index, (target_color_square, partner_square)) in enumerate(target_color_red_or_orange_edges):
                     red_orange = red_orange_permutation[index]
 
-                    if red_orange == "OR":
+                    if red_orange == "O":
                         distance += lab_distance(partner_square.lab, self.orange_baseline)
-                    elif red_orange == "Rd":
+                    elif red_orange == "R":
                         distance += lab_distance(partner_square.lab, self.red_baseline)
                     else:
                         raise Exception(red_orange)
@@ -857,17 +857,17 @@ class RubiksColorSolverGenericBase(object):
 
     # @timed_function
     def assign_green_white_corners(self, green_white_corners):
-        # log.info("Gr/Wh corner tuples %s".format(green_white_corners))
+        # log.info("G/W corner tuples %s".format(green_white_corners))
         valid_green_orange_white = (
-            ["Gr", "OR", "Wh"],
-            ["Wh", "Gr", "OR"],
-            ["OR", "Wh", "Gr"],
+            ["G", "O", "W"],
+            ["W", "G", "O"],
+            ["O", "W", "G"],
         )
 
         valid_green_white_red = (
-            ["Gr", "Wh", "Rd"],
-            ["Rd", "Gr", "Wh"],
-            ["Wh", "Rd", "Gr"],
+            ["G", "W", "R"],
+            ["R", "G", "W"],
+            ["W", "R", "G"],
         )
 
         for (corner1_index, corner2_index, corner3_index) in green_white_corners:
@@ -881,49 +881,49 @@ class RubiksColorSolverGenericBase(object):
                 color_seq not in valid_green_orange_white
                 and color_seq not in valid_green_white_red
             ):
-                if corner1.color_name == "OR":
-                    corner1.color_name = "Rd"
+                if corner1.color_name == "O":
+                    corner1.color_name = "R"
                     #log.warning(
-                    #    "change Gr/Wh corner partner %s from OR to Rd" % corner1
+                    #    "change G/W corner partner %s from O to R" % corner1
                     #)
-                elif corner1.color_name == "Rd":
-                    corner1.color_name = "OR"
+                elif corner1.color_name == "R":
+                    corner1.color_name = "O"
                     #log.warning(
-                    #    "change Gr/Wh corner partner %s from Rd to OR" % corner1
+                    #    "change G/W corner partner %s from R to O" % corner1
                     #)
-                elif corner2.color_name == "OR":
-                    corner2.color_name = "Rd"
+                elif corner2.color_name == "O":
+                    corner2.color_name = "R"
                     #log.warning(
-                    #    "change Gr/Wh corner partner %s from OR to Rd" % corner2
+                    #    "change G/W corner partner %s from O to R" % corner2
                     #)
-                elif corner2.color_name == "Rd":
-                    corner2.color_name = "OR"
+                elif corner2.color_name == "R":
+                    corner2.color_name = "O"
                     #log.warning(
-                    #    "change Gr/Wh corner partner %s from Rd to OR" % corner2
+                    #    "change G/W corner partner %s from R to O" % corner2
                     #)
-                elif corner3.color_name == "OR":
-                    corner3.color_name = "Rd"
+                elif corner3.color_name == "O":
+                    corner3.color_name = "R"
                     #log.warning(
-                    #    "change Gr/Wh corner partner %s from OR to Rd" % corner3
+                    #    "change G/W corner partner %s from O to R" % corner3
                     #)
-                elif corner3.color_name == "Rd":
-                    corner3.color_name = "OR"
+                elif corner3.color_name == "R":
+                    corner3.color_name = "O"
                     #log.warning(
-                    #    "change Gr/Wh corner partner %s from Rd to OR" % corner3
+                    #    "change G/W corner partner %s from R to O" % corner3
                     #)
 
     # @timed_function
     def assign_green_yellow_corners(self, green_yellow_corners):
         valid_green_yellow_orange = (
-            ["Gr", "Ye", "OR"],
-            ["OR", "Gr", "Ye"],
-            ["Ye", "OR", "Gr"],
+            ["G", "Y", "O"],
+            ["O", "G", "Y"],
+            ["Y", "O", "G"],
         )
 
         valid_green_red_yellow = (
-            ["Gr", "Rd", "Ye"],
-            ["Ye", "Gr", "Rd"],
-            ["Rd", "Ye", "Gr"],
+            ["G", "R", "Y"],
+            ["Y", "G", "R"],
+            ["R", "Y", "G"],
         )
 
         for (corner1_index, corner2_index, corner3_index) in green_yellow_corners:
@@ -938,50 +938,50 @@ class RubiksColorSolverGenericBase(object):
                 and color_seq not in valid_green_red_yellow
             ):
 
-                if corner1.color_name == "OR":
-                    corner1.color_name = "Rd"
+                if corner1.color_name == "O":
+                    corner1.color_name = "R"
                     #log.warning(
-                    #    "change Gr/Ye corner partner %s from OR to Rd" % corner1
+                    #    "change G/Y corner partner %s from O to R" % corner1
                     #)
-                elif corner1.color_name == "Rd":
-                    corner1.color_name = "OR"
+                elif corner1.color_name == "R":
+                    corner1.color_name = "O"
                     #log.warning(
-                    #    "change Gr/Ye corner partner %s from Rd to OR" % corner1
+                    #    "change G/Y corner partner %s from R to O" % corner1
                     #)
-                elif corner2.color_name == "OR":
-                    corner2.color_name = "Rd"
+                elif corner2.color_name == "O":
+                    corner2.color_name = "R"
                     #log.warning(
-                    #    "change Gr/Ye corner partner %s from OR to Rd" % corner2
+                    #    "change G/Y corner partner %s from O to R" % corner2
                     #)
-                elif corner2.color_name == "Rd":
-                    corner2.color_name = "OR"
+                elif corner2.color_name == "R":
+                    corner2.color_name = "O"
                     #log.warning(
-                    #    "change Gr/Ye corner partner %s from Rd to OR" % corner2
+                    #    "change G/Y corner partner %s from R to O" % corner2
                     #)
-                elif corner3.color_name == "OR":
-                    corner3.color_name = "Rd"
+                elif corner3.color_name == "O":
+                    corner3.color_name = "R"
                     #log.warning(
-                    #    "change Gr/Ye corner partner %s from OR to Rd" % corner3
+                    #    "change G/Y corner partner %s from O to R" % corner3
                     #)
-                elif corner3.color_name == "Rd":
-                    corner3.color_name = "OR"
+                elif corner3.color_name == "R":
+                    corner3.color_name = "O"
                     #log.warning(
-                    #    "change Gr/Ye corner partner %s from Rd to OR" % corner3
+                    #    "change G/Y corner partner %s from R to O" % corner3
                     #)
 
     # @timed_function
     def assign_blue_white_corners(self, blue_white_corners):
-        # log.info("Bu/Wh corner tuples %s".format(blue_white_corners))
+        # log.info("B/W corner tuples %s".format(blue_white_corners))
         valid_blue_white_orange = (
-            ["Bu", "Wh", "OR"],
-            ["OR", "Bu", "Wh"],
-            ["Wh", "OR", "Bu"],
+            ["B", "W", "O"],
+            ["O", "B", "W"],
+            ["W", "O", "B"],
         )
 
         valid_blue_red_white = (
-            ["Bu", "Rd", "Wh"],
-            ["Wh", "Bu", "Rd"],
-            ["Rd", "Wh", "Bu"],
+            ["B", "R", "W"],
+            ["W", "B", "R"],
+            ["R", "W", "B"],
         )
 
         for (corner1_index, corner2_index, corner3_index) in blue_white_corners:
@@ -996,49 +996,49 @@ class RubiksColorSolverGenericBase(object):
                 and color_seq not in valid_blue_red_white
             ):
 
-                if corner1.color_name == "OR":
-                    corner1.color_name = "Rd"
+                if corner1.color_name == "O":
+                    corner1.color_name = "R"
                     #log.warning(
-                    #    "change Bu/Wh corner partner %s from OR to Rd" % corner1
+                    #    "change B/W corner partner %s from O to R" % corner1
                     #)
-                elif corner1.color_name == "Rd":
-                    corner1.color_name = "OR"
+                elif corner1.color_name == "R":
+                    corner1.color_name = "O"
                     #log.warning(
-                    #    "change Bu/Wh corner partner %s from Rd to OR" % corner1
+                    #    "change B/W corner partner %s from R to O" % corner1
                     #)
-                elif corner2.color_name == "OR":
-                    corner2.color_name = "Rd"
+                elif corner2.color_name == "O":
+                    corner2.color_name = "R"
                     #log.warning(
-                    #    "change Bu/Wh corner partner %s from OR to Rd" % corner2
+                    #    "change B/W corner partner %s from O to R" % corner2
                     #)
-                elif corner2.color_name == "Rd":
-                    corner2.color_name = "OR"
+                elif corner2.color_name == "R":
+                    corner2.color_name = "O"
                     #log.warning(
-                    #    "change Bu/Wh corner partner %s from Rd to OR" % corner2
+                    #    "change B/W corner partner %s from R to O" % corner2
                     #)
-                elif corner3.color_name == "OR":
-                    corner3.color_name = "Rd"
+                elif corner3.color_name == "O":
+                    corner3.color_name = "R"
                     #log.warning(
-                    #    "change Bu/Wh corner partner %s from OR to Rd" % corner3
+                    #    "change B/W corner partner %s from O to R" % corner3
                     #)
-                elif corner3.color_name == "Rd":
-                    corner3.color_name = "OR"
+                elif corner3.color_name == "R":
+                    corner3.color_name = "O"
                     #log.warning(
-                    #    "change Bu/Wh corner partner %s from Rd to OR" % corner3
+                    #    "change B/W corner partner %s from R to O" % corner3
                     #)
 
     # @timed_function
     def assign_blue_yellow_corners(self, blue_yellow_corners):
         valid_blue_yellow_red = (
-            ["Bu", "Ye", "Rd"],
-            ["Rd", "Bu", "Ye"],
-            ["Ye", "Rd", "Bu"],
+            ["B", "Y", "R"],
+            ["R", "B", "Y"],
+            ["Y", "R", "B"],
         )
 
         valid_blue_orange_yellow = (
-            ["Bu", "OR", "Ye"],
-            ["Ye", "Bu", "OR"],
-            ["OR", "Ye", "Bu"],
+            ["B", "O", "Y"],
+            ["Y", "B", "O"],
+            ["O", "Y", "B"],
         )
 
         for (corner1_index, corner2_index, corner3_index) in blue_yellow_corners:
@@ -1053,35 +1053,35 @@ class RubiksColorSolverGenericBase(object):
                 and color_seq not in valid_blue_orange_yellow
             ):
 
-                if corner1.color_name == "OR":
-                    corner1.color_name = "Rd"
+                if corner1.color_name == "O":
+                    corner1.color_name = "R"
                     #log.warning(
-                    #    "change Bu/Ye corner partner %s from OR to Rd" % corner1
+                    #    "change B/Y corner partner %s from O to R" % corner1
                     #)
-                elif corner1.color_name == "Rd":
-                    corner1.color_name = "OR"
+                elif corner1.color_name == "R":
+                    corner1.color_name = "O"
                     #log.warning(
-                    #    "change Bu/Ye corner partner %s from Rd to OR" % corner1
+                    #    "change B/Y corner partner %s from R to O" % corner1
                     #)
-                elif corner2.color_name == "OR":
-                    corner2.color_name = "Rd"
+                elif corner2.color_name == "O":
+                    corner2.color_name = "R"
                     #log.warning(
-                    #    "change Bu/Ye corner partner %s from OR to Rd" % corner2
+                    #    "change B/Y corner partner %s from O to R" % corner2
                     #)
-                elif corner2.color_name == "Rd":
-                    corner2.color_name = "OR"
+                elif corner2.color_name == "R":
+                    corner2.color_name = "O"
                     #log.warning(
-                    #    "change Bu/Ye corner partner %s from Rd to OR" % corner2
+                    #    "change B/Y corner partner %s from R to O" % corner2
                     #)
-                elif corner3.color_name == "OR":
-                    corner3.color_name = "Rd"
+                elif corner3.color_name == "O":
+                    corner3.color_name = "R"
                     #log.warning(
-                    #    "change Bu/Ye corner partner %s from OR to Rd" % corner3
+                    #    "change B/Y corner partner %s from O to R" % corner3
                     #)
-                elif corner3.color_name == "Rd":
-                    corner3.color_name = "OR"
+                elif corner3.color_name == "R":
+                    corner3.color_name = "O"
                     #log.warning(
-                    #    "change Bu/Ye corner partner %s from Rd to OR" % corner3
+                    #    "change B/Y corner partner %s from R to O" % corner3
                     #)
 
     # @timed_function
@@ -1386,13 +1386,13 @@ class RubiksColorSolverGenericBase(object):
                 partner_position = side.get_wing_partner(square.position)
                 partner = self.pos2square[partner_position]
 
-                if square.color_name == "Gr" and partner.color_name == "OR":
+                if square.color_name == "G" and partner.color_name == "O":
                     green_orange_position = partner_position
-                elif square.color_name == "Gr" and partner.color_name == "Rd":
+                elif square.color_name == "G" and partner.color_name == "R":
                     green_red_position = partner_position
-                elif square.color_name == "Bu" and partner.color_name == "OR":
+                elif square.color_name == "B" and partner.color_name == "O":
                     blue_orange_position = partner_position
-                elif square.color_name == "Bu" and partner.color_name == "Rd":
+                elif square.color_name == "B" and partner.color_name == "R":
                     blue_red_position = partner_position
 
         #log.debug("green_orange_position %s".format(green_orange_position))
@@ -1426,31 +1426,31 @@ class RubiksColorSolverGenericBase(object):
         if distance_swap_green_edge < distance_swap_blue_edge:
             '''
             log.warning(
-                "edge parity correction: change %s from %s to Rd"
+                "edge parity correction: change %s from %s to R"
                 % (square_green_orange, square_green_orange.color_name)
             )
             log.warning(
-                "edge parity correction: change %s from %s to OR"
+                "edge parity correction: change %s from %s to O"
                 % (square_green_red, square_green_red.color_name)
             )
             '''
-            square_green_orange.color_name = "Rd"
-            square_green_red.color_name = "OR"
+            square_green_orange.color_name = "R"
+            square_green_red.color_name = "O"
             square_green_orange.side_name = self.color_to_side_name[square_green_orange.color_name]
             square_green_red.side_name = self.color_to_side_name[square_green_red.color_name]
         else:
             '''
             log.warning(
-                "edge parity correction: change %s from %s to Rd"
+                "edge parity correction: change %s from %s to R"
                 % (square_blue_orange, square_blue_orange.color_name)
             )
             log.warning(
-                "edge parity correction: change %s from %s to OR"
+                "edge parity correction: change %s from %s to O"
                 % (square_blue_red, square_blue_red.color_name)
             )
             '''
-            square_blue_orange.color_name = "Rd"
-            square_blue_red.color_name = "OR"
+            square_blue_orange.color_name = "R"
+            square_blue_red.color_name = "O"
             square_blue_orange.side_name = self.color_to_side_name[square_blue_orange.color_name]
             square_blue_red.side_name = self.color_to_side_name[square_blue_red.color_name]
 

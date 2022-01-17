@@ -149,15 +149,15 @@ crayola_colors = {
     #   blue = (22, 57, 103)
     #   red = (104, 4, 2)
     #
-    "Wh": hashtag_rgb_to_labcolor("#FFFFFF"),
-    "Gr": hashtag_rgb_to_labcolor("#14694a"),
-    # 'Ye': hashtag_rgb_to_labcolor('#FFFF00'),
-    "Ye": hashtag_rgb_to_labcolor("#f9d62e"),
-    # 'OR': hashtag_rgb_to_labcolor('#943509'),
-    "OR": hashtag_rgb_to_labcolor("#e09864"),
-    "Bu": hashtag_rgb_to_labcolor("#163967"),
-    # 'Rd': hashtag_rgb_to_labcolor('#680402')
-    "Rd": hashtag_rgb_to_labcolor("#c4281b"),
+    "W": hashtag_rgb_to_labcolor("#FFFFFF"),
+    "G": hashtag_rgb_to_labcolor("#14694a"),
+    # 'Y': hashtag_rgb_to_labcolor('#FFFF00'),
+    "Y": hashtag_rgb_to_labcolor("#f9d62e"),
+    # 'O': hashtag_rgb_to_labcolor('#943509'),
+    "O": hashtag_rgb_to_labcolor("#e09864"),
+    "B": hashtag_rgb_to_labcolor("#163967"),
+    # 'R': hashtag_rgb_to_labcolor('#680402')
+    "R": hashtag_rgb_to_labcolor("#c4281b"),
 }
 
 

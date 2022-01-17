@@ -24,7 +24,7 @@ if sys.version_info < (3, 4):
     raise SystemError("Must be using Python 3.4 or higher")
 
 
-ALL_COLORS = ("Bu", "Gr", "OR", "Rd", "Wh", "Ye")
+ALL_COLORS = ("B", "G", "O", "R", "W", "Y")
 SIDES_COUNT = 6
 
 from collections import OrderedDict
@@ -56,7 +56,7 @@ def tsp_matrix_corners(corners):
     # build a full matrix of color to color distances
     # init the 2d list with 0s
     matrix = [x[:] for x in [[0] * len_corners] * len_corners]
-    color_names = set(("Wh", "Ye", "OR", "Rd", "Bu", "Gr"))
+    color_names = set(("W", "Y", "O", "R", "B", "G"))
 
     for x in range(len_corners):
         x_corner = corners[x]
@@ -196,7 +196,7 @@ def tsp_matrix_edge_pairs(edge_pairs):
     # build a full matrix of color to color distances
     # init the 2d list with 0s
     matrix = [x[:] for x in [[0] * len_edge_pairs] * len_edge_pairs]
-    color_names = set(("Wh", "Ye", "OR", "Rd", "Bu", "Gr"))
+    color_names = set(("W", "Y", "O", "R", "B", "G"))
 
     for x in range(len_edge_pairs):
         x_edge_pair = edge_pairs[x]
@@ -489,18 +489,18 @@ crayola_colors = {
     #   blue = (22, 57, 103)
     #   red = (104, 4, 2)
     #
-    #"Wh": hashtag_rgb_to_labcolor("#FFFFFF"),
-    #"Gr": hashtag_rgb_to_labcolor("#14694a"),
-    #"Ye": hashtag_rgb_to_labcolor("#FFFF00"),
-    #"OR": hashtag_rgb_to_labcolor("#943509"),
-    #"Bu": hashtag_rgb_to_labcolor("#163967"),
-    #"Rd": hashtag_rgb_to_labcolor("#680402"),
-    "Wh" : LabColor(100.0, 0.00526049995830391, -0.01040818452526793, 255, 255, 255),
-    "Gr" : LabColor(39.14982168015123, -32.45052099773829, 10.60519920674466, 20, 105, 74),
-    "Ye" : LabColor(97.13824698129729, -21.55590833483229, 94.48248544644462, 255, 255, 0),
-    "OR" : LabColor(35.71689493804023, 38.18518746791636, 43.98251678431012, 148, 53, 9),
-    "Bu" : LabColor(23.92144819784853, 5.28400492805528, -30.63998357385018, 22, 57, 103),
-    "Rd" : LabColor(20.18063311070288, 40.48184409611946, 29.94038922869042, 104, 4, 2),
+    #"W": hashtag_rgb_to_labcolor("#FFFFFF"),
+    #"G": hashtag_rgb_to_labcolor("#14694a"),
+    #"Y": hashtag_rgb_to_labcolor("#FFFF00"),
+    #"O": hashtag_rgb_to_labcolor("#943509"),
+    #"B": hashtag_rgb_to_labcolor("#163967"),
+    #"R": hashtag_rgb_to_labcolor("#680402"),
+    "W" : LabColor(100.0, 0.00526049995830391, -0.01040818452526793, 255, 255, 255),
+    "G" : LabColor(39.14982168015123, -32.45052099773829, 10.60519920674466, 20, 105, 74),
+    "Y" : LabColor(97.13824698129729, -21.55590833483229, 94.48248544644462, 255, 255, 0),
+    "O" : LabColor(35.71689493804023, 38.18518746791636, 43.98251678431012, 148, 53, 9),
+    "B" : LabColor(23.92144819784853, 5.28400492805528, -30.63998357385018, 22, 57, 103),
+    "R" : LabColor(20.18063311070288, 40.48184409611946, 29.94038922869042, 104, 4, 2),
 }
 
 
@@ -933,7 +933,7 @@ $(document).ready(function()
             fh.write("<div class='clear colors'>\n")
             fh.write("<h2>{}</h2>\n".format(desc))
 
-            for color_name in ("Wh", "Ye", "Gr", "Bu", "OR", "Rd"):
+            for color_name in ("W", "Y", "G", "B", "O", "R"):
                 lab = box[color_name]
 
                 fh.write(
@@ -1014,12 +1014,12 @@ $(document).ready(function()
         # even cube
         else:
             self.color_to_side_name = {
-                "Wh": "U",
-                "OR": "L",
-                "Gr": "F",
-                "Rd": "R",
-                "Bu": "B",
-                "Ye": "D",
+                "W": "U",
+                "O": "L",
+                "G": "F",
+                "R": "R",
+                "B": "B",
+                "Y": "D",
             }
 
         for side in (self.sideU, self.sideR, self.sideF, self.sideD, self.sideL, self.sideB):
@@ -1067,7 +1067,7 @@ $(document).ready(function()
         # print("assign_color_names '{}' via {}".format(desc, color_permutations))
 
         def get_even_cube_center_color_permutation(permutation_index):
-            LINE_LENGTH = 18
+            LINE_LENGTH = 12
             start = permutation_index * LINE_LENGTH
             end = start + LINE_LENGTH
             return ref_even_cube_center_color_permutations[start:end].split()
@@ -1114,7 +1114,7 @@ $(document).ready(function()
             print("")
             '''
 
-            # Move the squares_list row that is closest to Bu to the front, then Gr, OR, Rd, Wh, Ye.
+            # Move the squares_list row that is closest to B to the front, then G, O, R, W, Y.
             # This will allow us to skip many more entries later.
             for (insert_index, color_name) in enumerate(ref_ALL_COLORS):
                 min_color_name_distance = 99999
@@ -1232,17 +1232,17 @@ $(document).ready(function()
 
         for side in (self.sideU, self.sideR, self.sideF, self.sideD, self.sideL, self.sideB):
             for square in side.center_squares + side.corner_squares + side.edge_squares:
-                if square.color_name == "Wh":
+                if square.color_name == "W":
                     white_squares.append(square)
-                elif square.color_name == "Ye":
+                elif square.color_name == "Y":
                     yellow_squares.append(square)
-                elif square.color_name == "OR":
+                elif square.color_name == "O":
                     orange_squares.append(square)
-                elif square.color_name == "Rd":
+                elif square.color_name == "R":
                     red_squares.append(square)
-                elif square.color_name == "Gr":
+                elif square.color_name == "G":
                     green_squares.append(square)
-                elif square.color_name == "Bu":
+                elif square.color_name == "B":
                     blue_squares.append(square)
 
         return (
@@ -1260,7 +1260,7 @@ $(document).ready(function()
         Temporarily assign names to all squares, use crayola colors as reference point.
 
         We use these name assignments to build our "color_box" which will be our
-        references Wh, Ye, OR, Rd, Gr, Bu colors for assigning color names to edge
+        references W, Y, O, R, G, B colors for assigning color names to edge
         and center squares.
         """
 
@@ -1364,17 +1364,17 @@ $(document).ready(function()
             for side in (self.sideU, self.sideR, self.sideF, self.sideD, self.sideL, self.sideB):
                 square = self.pos2square[side.mid_pos]
 
-                if square.color_name == "Wh":
+                if square.color_name == "W":
                     white_center = square
-                elif square.color_name == "Ye":
+                elif square.color_name == "Y":
                     yellow_center = square
-                elif square.color_name == "OR":
+                elif square.color_name == "O":
                     orange_center = square
-                elif square.color_name == "Rd":
+                elif square.color_name == "R":
                     red_center = square
-                elif square.color_name == "Gr":
+                elif square.color_name == "G":
                     green_center = square
-                elif square.color_name == "Bu":
+                elif square.color_name == "B":
                     blue_center = square
 
             if white_center and yellow_center:
@@ -1411,15 +1411,15 @@ $(document).ready(function()
 
         (white_squares, yellow_squares, orange_squares, red_squares, green_squares, blue_squares) = self.get_squares_by_color_name()
         self.color_box = {}
-        self.color_box["Wh"] = square_list_to_lab(white_squares)
-        self.color_box["Ye"] = square_list_to_lab(yellow_squares)
-        self.color_box["OR"] = square_list_to_lab(orange_squares)
-        self.color_box["Rd"] = square_list_to_lab(red_squares)
-        self.color_box["Gr"] = square_list_to_lab(green_squares)
-        self.color_box["Bu"] = square_list_to_lab(blue_squares)
+        self.color_box["W"] = square_list_to_lab(white_squares)
+        self.color_box["Y"] = square_list_to_lab(yellow_squares)
+        self.color_box["O"] = square_list_to_lab(orange_squares)
+        self.color_box["R"] = square_list_to_lab(red_squares)
+        self.color_box["G"] = square_list_to_lab(green_squares)
+        self.color_box["B"] = square_list_to_lab(blue_squares)
 
-        self.orange_baseline = self.color_box["OR"]
-        self.red_baseline = self.color_box["Rd"]
+        self.orange_baseline = self.color_box["O"]
+        self.red_baseline = self.color_box["R"]
 
         # Nuke all color names (they were temporary)
         for side in (self.sideU, self.sideR, self.sideF, self.sideD, self.sideL, self.sideB):
@@ -1434,19 +1434,19 @@ $(document).ready(function()
         """
         Assign names to the corner squares
         """
-        white = Square(None, "Wh", self.color_box["Wh"].red, self.color_box["Wh"].green, self.color_box["Wh"].blue)
-        yellow = Square(None, "Ye", self.color_box["Ye"].red, self.color_box["Ye"].green, self.color_box["Ye"].blue)
-        orange = Square(None, "OR", self.color_box["OR"].red, self.color_box["OR"].green, self.color_box["OR"].blue)
-        red = Square(None, "Rd", self.color_box["Rd"].red, self.color_box["Rd"].green, self.color_box["Rd"].blue)
-        green = Square(None, "Gr", self.color_box["Gr"].red, self.color_box["Gr"].green, self.color_box["Gr"].blue)
-        blue = Square(None, "Bu", self.color_box["Bu"].red, self.color_box["Bu"].green, self.color_box["Bu"].blue)
+        white = Square(None, "W", self.color_box["W"].red, self.color_box["W"].green, self.color_box["W"].blue)
+        yellow = Square(None, "Y", self.color_box["Y"].red, self.color_box["Y"].green, self.color_box["Y"].blue)
+        orange = Square(None, "O", self.color_box["O"].red, self.color_box["O"].green, self.color_box["O"].blue)
+        red = Square(None, "R", self.color_box["R"].red, self.color_box["R"].green, self.color_box["R"].blue)
+        green = Square(None, "G", self.color_box["G"].red, self.color_box["G"].green, self.color_box["G"].blue)
+        blue = Square(None, "B", self.color_box["B"].red, self.color_box["B"].green, self.color_box["B"].blue)
 
-        white.color_name = "Wh"
-        yellow.color_name = "Ye"
-        orange.color_name = "OR"
-        red.color_name = "Rd"
-        green.color_name = "Gr"
-        blue.color_name = "Bu"
+        white.color_name = "W"
+        yellow.color_name = "Y"
+        orange.color_name = "O"
+        red.color_name = "R"
+        green.color_name = "G"
+        blue.color_name = "B"
 
         target_corners = [
            (white, green, orange),
@@ -1492,19 +1492,19 @@ $(document).ready(function()
         # Nothing to be done for 2x2x2
         from rubiks_color_resolver.cube_333 import edge_orbit_id
 
-        white = Square(None, "Wh", self.color_box["Wh"].red, self.color_box["Wh"].green, self.color_box["Wh"].blue)
-        yellow = Square(None, "Ye", self.color_box["Ye"].red, self.color_box["Ye"].green, self.color_box["Ye"].blue)
-        orange = Square(None, "OR", self.color_box["OR"].red, self.color_box["OR"].green, self.color_box["OR"].blue)
-        red = Square(None, "Rd", self.color_box["Rd"].red, self.color_box["Rd"].green, self.color_box["Rd"].blue)
-        green = Square(None, "Gr", self.color_box["Gr"].red, self.color_box["Gr"].green, self.color_box["Gr"].blue)
-        blue = Square(None, "Bu", self.color_box["Bu"].red, self.color_box["Bu"].green, self.color_box["Bu"].blue)
+        white = Square(None, "W", self.color_box["W"].red, self.color_box["W"].green, self.color_box["W"].blue)
+        yellow = Square(None, "Y", self.color_box["Y"].red, self.color_box["Y"].green, self.color_box["Y"].blue)
+        orange = Square(None, "O", self.color_box["O"].red, self.color_box["O"].green, self.color_box["O"].blue)
+        red = Square(None, "R", self.color_box["R"].red, self.color_box["R"].green, self.color_box["R"].blue)
+        green = Square(None, "G", self.color_box["G"].red, self.color_box["G"].green, self.color_box["G"].blue)
+        blue = Square(None, "B", self.color_box["B"].red, self.color_box["B"].green, self.color_box["B"].blue)
 
-        white.color_name = "Wh"
-        yellow.color_name = "Ye"
-        orange.color_name = "OR"
-        red.color_name = "Rd"
-        green.color_name = "Gr"
-        blue.color_name = "Bu"
+        white.color_name = "W"
+        yellow.color_name = "Y"
+        orange.color_name = "O"
+        red.color_name = "R"
+        green.color_name = "G"
+        blue.color_name = "B"
 
         for target_orbit_id in range(self.orbits):
             edge_pairs = []
