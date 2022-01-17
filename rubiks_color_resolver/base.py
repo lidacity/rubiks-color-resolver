@@ -10,6 +10,7 @@ if sys.version_info < (3, 4):
 from collections import OrderedDict
 from rubiks_color_resolver.cie2000 import lab_distance_cie2000
 
+WIDTH = 3
 
 # @timed_function
 def lab_distance(lab1, lab2):
@@ -268,13 +269,13 @@ class Square(object):
 
 class Side(object):
 
-    def __init__(self, cube, width, name):
+    def __init__(self, cube, name):
         self.cube = cube
         self.name = name  # U, L, etc
         self.color = None
         self.squares = OrderedDict()
-        self.width = width
-        self.squares_per_side = width * width
+        self.width = WIDTH
+        self.squares_per_side = self.width * self.width
         self.center_squares = []
         self.edge_squares = []
         self.corner_squares = []
@@ -297,10 +298,7 @@ class Side(object):
         self.max_pos = (index * self.squares_per_side) + self.squares_per_side
 
         # If this is a cube of odd width (3x3x3) then define a mid_pos
-        if self.width % 2 == 0:
-            self.mid_pos = None
-        else:
-            self.mid_pos = int((self.min_pos + self.max_pos) / 2)
+        self.mid_pos = int((self.min_pos + self.max_pos) / 2)
 
         self.corner_pos = (
             self.min_pos,
@@ -386,9 +384,9 @@ class Side(object):
 
 class RubiksColorSolverGenericBase(object):
 
-    def __init__(self, width):
-        self.width = width
-        self.height = width
+    def __init__(self):
+        self.width = WIDTH
+        self.height = WIDTH
         self.squares_per_side = self.width * self.width
         self.orbits = int(ceil((self.width - 2) / 2.0))
         self.state = []
@@ -397,23 +395,19 @@ class RubiksColorSolverGenericBase(object):
         self.all_edge_positions = []
         self.write_debug_file = False
 
-        if self.width % 2 == 0:
-            self.even = True
-            self.odd = False
-        else:
-            self.even = False
-            self.odd = True
+        self.even = False
+        self.odd = True
 
         #if not os.path.exists(HTML_DIRECTORY):
         #    os.makedirs(HTML_DIRECTORY)
 
         self.sides = {
-            "U": Side(self, self.width, "U"),
-            "L": Side(self, self.width, "L"),
-            "F": Side(self, self.width, "F"),
-            "R": Side(self, self.width, "R"),
-            "B": Side(self, self.width, "B"),
-            "D": Side(self, self.width, "D"),
+            "U": Side(self, "U"),
+            "L": Side(self, "L"),
+            "F": Side(self, "F"),
+            "R": Side(self, "R"),
+            "B": Side(self, "B"),
+            "D": Side(self, "D"),
         }
 
         self.sideU = self.sides["U"]
@@ -622,18 +616,7 @@ class RubiksColorSolverGenericBase(object):
     # @timed_function
     def validate_edge_orbit(self, orbit_id):
 
-        if self.width == 2:
-            from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
-        elif self.width == 3:
-            from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
-        elif self.width == 4:
-            from rubiks_color_resolver.cube_444 import edge_orbit_wing_pairs
-        elif self.width == 5:
-            from rubiks_color_resolver.cube_555 import edge_orbit_wing_pairs
-        elif self.width == 6:
-            from rubiks_color_resolver.cube_666 import edge_orbit_wing_pairs
-        elif self.width == 7:
-            from rubiks_color_resolver.cube_777 import edge_orbit_wing_pairs
+        from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
 
         valid = True
 
@@ -676,18 +659,7 @@ class RubiksColorSolverGenericBase(object):
         blue_white_corners = []
         blue_yellow_corners = []
 
-        if self.width == 2:
-            from rubiks_color_resolver.cube_222 import corner_tuples
-        elif self.width == 3:
-            from rubiks_color_resolver.cube_333 import corner_tuples
-        elif self.width == 4:
-            from rubiks_color_resolver.cube_444 import corner_tuples
-        elif self.width == 5:
-            from rubiks_color_resolver.cube_555 import corner_tuples
-        elif self.width == 6:
-            from rubiks_color_resolver.cube_666 import corner_tuples
-        elif self.width == 7:
-            from rubiks_color_resolver.cube_777 import corner_tuples
+        from rubiks_color_resolver.cube_333 import corner_tuples
 
         for corner_tuple in corner_tuples:
             corner_colors = []
@@ -719,18 +691,7 @@ class RubiksColorSolverGenericBase(object):
     # @timed_function
     def find_edges_by_color(self, orbit_id):
 
-        if self.width == 2:
-            from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
-        elif self.width == 3:
-            from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
-        elif self.width == 4:
-            from rubiks_color_resolver.cube_444 import edge_orbit_wing_pairs
-        elif self.width == 5:
-            from rubiks_color_resolver.cube_555 import edge_orbit_wing_pairs
-        elif self.width == 6:
-            from rubiks_color_resolver.cube_666 import edge_orbit_wing_pairs
-        elif self.width == 7:
-            from rubiks_color_resolver.cube_777 import edge_orbit_wing_pairs
+        from rubiks_color_resolver.cube_333 import edge_orbit_wing_pairs
 
         green_red_orange_color_names = ("Gr", "Rd", "OR")
         blue_red_orange_color_names = ("Bu", "Rd", "OR")
@@ -791,10 +752,7 @@ class RubiksColorSolverGenericBase(object):
     # @timed_function
     def sanity_check_edges_red_orange_count_for_orbit(self, target_orbit_id):
 
-        if (self.width == 4 or self.width == 6 or (self.width == 5 and target_orbit_id == 0)):
-            high_low_edge_per_color = self.get_high_low_per_edge_color(target_orbit_id)
-        else:
-            high_low_edge_per_color = None
+        high_low_edge_per_color = None
 
         def fix_orange_vs_red_for_color(target_color, target_color_red_or_orange_edges):
 
@@ -834,25 +792,6 @@ class RubiksColorSolverGenericBase(object):
 
                     partner_square.color_name = red_orange
                     partner_square.side_name = self.color_to_side_name[partner_square.color_name]
-
-                if (self.width == 4 or self.width == 6 or (self.width == 5 and target_orbit_id == 0)):
-
-                    for (index, (target_color_square, partner_square)) in enumerate(target_color_red_or_orange_edges):
-                        red_orange = red_orange_permutation[index]
-                        edge_color_pair = edge_color_pair_map[
-                            "%s/%s"
-                            % (
-                                target_color_square.color_name,
-                                partner_square.color_name,
-                            )
-                        ]
-                        # log.info("high_low_edge_per_color\n%s".format(high_low_edge_per_color))
-
-                        if len(high_low_edge_per_color[edge_color_pair]) != 2:
-                            # log.warning("*" * 40)
-                            # log.warning("edge_color_pair %s high_low is %s" % (edge_color_pair, high_low_edge_per_color[edge_color_pair]))
-                            # log.warning("*" * 40)
-                            distance += 999
 
                 if min_distance is None or distance < min_distance:
                     min_distance = distance
@@ -910,51 +849,6 @@ class RubiksColorSolverGenericBase(object):
         fix_orange_vs_red_for_color("yellow", yellow_red_or_orange_edges)
 
         self.validate_edge_orbit(target_orbit_id)
-
-    # @timed_function
-    def get_high_low_per_edge_color(self, target_orbit_id):
-
-        if self.width == 4:
-            from rubiks_color_resolver.cube_444 import edge_orbit_wing_pairs, highlow_edge_values
-        elif self.width == 5:
-            from rubiks_color_resolver.cube_555 import edge_orbit_wing_pairs, highlow_edge_values
-        elif self.width == 6:
-            from rubiks_color_resolver.cube_666 import edge_orbit_wing_pairs, highlow_edge_values
-        else:
-            raise Exception("Add support for %sx%sx%s" % (self.width, self.width, self.width))
-
-        high_low_per_edge_color = {
-            "Gr/Wh": set(),
-            "Bu/Wh": set(),
-            "OR/Wh": set(),
-            "Rd/Wh": set(),
-            "Gr/OR": set(),
-            "Bu/OR": set(),
-            "Gr/Rd": set(),
-            "Bu/Rd": set(),
-            "Gr/Ye": set(),
-            "Bu/Ye": set(),
-            "OR/Ye": set(),
-            "Rd/Ye": set(),
-        }
-
-        for (square_index, partner_index) in edge_orbit_wing_pairs[target_orbit_id]:
-            square = self.pos2square[square_index]
-            partner = self.pos2square[partner_index]
-
-            if self.width == 4:
-                highlow = highlow_edge_values[(square_index, partner_index, square.side_name, partner.side_name)]
-            elif self.width == 5:
-                highlow = highlow_edge_values[(square_index, partner_index, square.side_name, partner.side_name)]
-            elif self.width == 6:
-                highlow = highlow_edge_values[(square_index, partner_index, square.side_name, partner.side_name)]
-
-            edge_color_pair = edge_color_pair_map["%s/%s" % (square.color_name, partner.color_name)]
-            high_low_per_edge_color[edge_color_pair].add(highlow)
-
-        # log.info("high_low_per_edge_color for orbit %d\n%s" % (target_orbit_id, high_low_per_edge_color))
-        # log.info("")
-        return high_low_per_edge_color
 
     # @timed_function
     def sanity_check_edge_squares(self):
@@ -1453,10 +1347,6 @@ class RubiksColorSolverGenericBase(object):
         """
 
         if self.even:
-            return
-
-        # TODO add support for 555 and 777
-        if self.width != 3:
             return
 
         debug = False

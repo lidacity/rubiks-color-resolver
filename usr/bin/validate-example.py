@@ -7,7 +7,7 @@ determine if the state of your cube is valid
 
 from rubiks_color_resolver.base import RubiksColorSolverGenericBase
 
-cube = RubiksColorSolverGenericBase(3)
+cube = RubiksColorSolverGenericBase()
 cube.enter_cube_state("FFBFUBFBBUDDURDUUDRLLRFLRRLBBFBDFBFFUDDULDUUDLRRLBRLLR")
 cube.sanity_check_edge_squares()
 cube.validate_all_corners_found()

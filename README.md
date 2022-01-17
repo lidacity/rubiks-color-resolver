@@ -12,6 +12,12 @@ $ sudo python3 -m pip install git+https://github.com/lidacity/rubiks-color-resol
 - support only rubik's cube 3x3x3
 
 
+## Overview
+rubiks-color-resolver.py
+- accept a JSON string of RGB values for each square of a rubik'ss cube (only 3x3x3 are supported).
+- analyzes all RGB values to assign each square one of the six colors of the cube. It then uses a Travelling Salesman algorithm (tsp_solver) to sort the colors.
+
+
 
 # Original rubiks-color-resolver
 
@@ -26,7 +32,7 @@ rubiks-color-resolver.py
 - analyzes all RGB values to assign each square one of the six colors of the cube. It then uses a Travelling Salesman algorithm (tsp_solver) to sort the colors.
 
 ```
-jdoe@laptop[rubiks-color-resolver]# ./usr/bin/rubiks-color-resolver.py --filename ./tests/test-data/3x3x3-tetris.txt
+jdoe@laptop[rubiks-color-resolver]# ./rubiks-color-resolver.py --filename ./tests/test-data/3x3x3-tetris.txt
 Cube
 
            OR OR Rd

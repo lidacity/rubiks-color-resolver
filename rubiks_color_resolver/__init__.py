@@ -1318,18 +1318,7 @@ $(document).ready(function()
 
             edge_pairs = []
 
-            if self.width == 2:
-                from rubiks_color_resolver.cube_222 import corner_tuples
-            elif self.width == 3:
-                from rubiks_color_resolver.cube_333 import corner_tuples
-            elif self.width == 4:
-                from rubiks_color_resolver.cube_444 import corner_tuples
-            elif self.width == 5:
-                from rubiks_color_resolver.cube_555 import corner_tuples
-            elif self.width == 6:
-                from rubiks_color_resolver.cube_666 import corner_tuples
-            elif self.width == 7:
-                from rubiks_color_resolver.cube_777 import corner_tuples
+            from rubiks_color_resolver.cube_333 import corner_tuples
 
             corners = []
 
@@ -1364,38 +1353,37 @@ $(document).ready(function()
             red_orange_endpoints = None
 
             # odd cube
-            if self.width % 2 == 1:
-                white_center = None
-                yellow_center = None
-                orange_center = None
-                red_center = None
-                green_center = None
-                blue_center = None
+            white_center = None
+            yellow_center = None
+            orange_center = None
+            red_center = None
+            green_center = None
+            blue_center = None
 
-                for side in (self.sideU, self.sideR, self.sideF, self.sideD, self.sideL, self.sideB):
-                    square = self.pos2square[side.mid_pos]
+            for side in (self.sideU, self.sideR, self.sideF, self.sideD, self.sideL, self.sideB):
+                square = self.pos2square[side.mid_pos]
 
-                    if square.color_name == "Wh":
-                        white_center = square
-                    elif square.color_name == "Ye":
-                        yellow_center = square
-                    elif square.color_name == "OR":
-                        orange_center = square
-                    elif square.color_name == "Rd":
-                        red_center = square
-                    elif square.color_name == "Gr":
-                        green_center = square
-                    elif square.color_name == "Bu":
-                        blue_center = square
+                if square.color_name == "Wh":
+                    white_center = square
+                elif square.color_name == "Ye":
+                    yellow_center = square
+                elif square.color_name == "OR":
+                    orange_center = square
+                elif square.color_name == "Rd":
+                    red_center = square
+                elif square.color_name == "Gr":
+                    green_center = square
+                elif square.color_name == "Bu":
+                    blue_center = square
 
-                if white_center and yellow_center:
-                    white_yellow_endpoints = (white_center, yellow_center)
+            if white_center and yellow_center:
+                white_yellow_endpoints = (white_center, yellow_center)
 
-                if green_center and blue_center:
-                    green_blue_endpoints = (green_center, blue_center)
+            if green_center and blue_center:
+                green_blue_endpoints = (green_center, blue_center)
 
-                if red_center and orange_center:
-                    red_orange_endpoints = (red_center, orange_center)
+            if red_center and orange_center:
+                red_orange_endpoints = (red_center, orange_center)
 
             # Nuke all color names (they were temporary)
             for side in (self.sideU, self.sideR, self.sideF, self.sideD, self.sideL, self.sideB):
@@ -1470,18 +1458,7 @@ $(document).ready(function()
            (yellow, red, blue),
         ]
 
-        if self.width == 2:
-            from rubiks_color_resolver.cube_222 import corner_tuples
-        elif self.width == 3:
-            from rubiks_color_resolver.cube_333 import corner_tuples
-        elif self.width == 4:
-            from rubiks_color_resolver.cube_444 import corner_tuples
-        elif self.width == 5:
-            from rubiks_color_resolver.cube_555 import corner_tuples
-        elif self.width == 6:
-            from rubiks_color_resolver.cube_666 import corner_tuples
-        elif self.width == 7:
-            from rubiks_color_resolver.cube_777 import corner_tuples
+        from rubiks_color_resolver.cube_333 import corner_tuples
 
         corners = []
 
@@ -1512,18 +1489,7 @@ $(document).ready(function()
         """
 
         # Nothing to be done for 2x2x2
-        if self.width == 2:
-            return
-        elif self.width == 3:
-            from rubiks_color_resolver.cube_333 import edge_orbit_id
-        elif self.width == 4:
-            from rubiks_color_resolver.cube_444 import edge_orbit_id
-        elif self.width == 5:
-            from rubiks_color_resolver.cube_555 import edge_orbit_id
-        elif self.width == 6:
-            from rubiks_color_resolver.cube_666 import edge_orbit_id
-        elif self.width == 7:
-            from rubiks_color_resolver.cube_777 import edge_orbit_id
+        from rubiks_color_resolver.cube_333 import edge_orbit_id
 
         white = Square(None, "Wh", self.color_box["Wh"].red, self.color_box["Wh"].green, self.color_box["Wh"].blue)
         yellow = Square(None, "Ye", self.color_box["Ye"].red, self.color_box["Ye"].green, self.color_box["Ye"].blue)
@@ -1618,18 +1584,7 @@ $(document).ready(function()
         Use traveling salesman algorithm to sort the squares by color
         """
 
-        if self.width == 2:
-            return
-        elif self.width == 3:
-            from rubiks_color_resolver.cube_333 import center_groups
-        elif self.width == 4:
-            from rubiks_color_resolver.cube_444 import center_groups
-        elif self.width == 5:
-            from rubiks_color_resolver.cube_555 import center_groups
-        elif self.width == 6:
-            from rubiks_color_resolver.cube_666 import center_groups
-        elif self.width == 7:
-            from rubiks_color_resolver.cube_777 import center_groups
+        from rubiks_color_resolver.cube_333 import center_groups
 
         for (desc, centers_squares) in center_groups:
             #log.debug("\n\n\n\n")
@@ -1747,11 +1702,11 @@ def resolve_colors(argv):
     for key, value in scan_data.items():
         scan_data[key] = tuple(value)
 
-    square_count = len(list(scan_data.keys()))
-    square_count_per_side = int(square_count / 6)
-    width = int(sqrt(square_count_per_side))
+    #square_count = len(list(scan_data.keys()))
+    #square_count_per_side = int(square_count / 6)
+    #width = int(sqrt(square_count_per_side))
 
-    cube = RubiksColorSolverGeneric(width)
+    cube = RubiksColorSolverGeneric()
     cube.write_debug_file = True
     cube.enter_scan_data(scan_data)
     cube.crunch_colors()
