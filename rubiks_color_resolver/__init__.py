@@ -28,12 +28,6 @@ ALL_COLORS = ("Bu", "Gr", "OR", "Rd", "Wh", "Ye")
 SIDES_COUNT = 6
 
 from collections import OrderedDict
-HTML_FILENAME = "rubiks-color-resolver.html"
-
-try:
-    os.unlink(HTML_FILENAME)
-except Exception:
-    pass
 
 
 # @timed_function
@@ -577,6 +571,9 @@ def square_list_to_lab(squares):
 
 class RubiksColorSolverGeneric(RubiksColorSolverGenericBase):
 
+    filename = "rubiks-color-resolver.html"
+
+
     # @timed_function
     def www_header(self):
         """
@@ -584,9 +581,9 @@ class RubiksColorSolverGeneric(RubiksColorSolverGenericBase):
         """
         side_margin = 10
         square_size = 40
-        size = self.width  # 3 for 3x3x3, etc
+        size = self.width  # 3 for 3x3x3
 
-        with open(HTML_FILENAME, "a") as fh:
+        with open(self.filename, "a") as fh:
             fh.write(
                 """<!DOCTYPE html>
 <html>
@@ -722,7 +719,7 @@ $(document).ready(function()
             )
 
     def write_color_corners(self, desc, corners):
-        with open(HTML_FILENAME, "a") as fh:
+        with open(self.filename, "a") as fh:
             fh.write("<div class='clear colors'>\n")
             fh.write("<h2>%s</h2>\n" % desc)
 
@@ -764,7 +761,7 @@ $(document).ready(function()
             fh.write("</div>\n")
 
     def write_color_edge_pairs(self, desc, square_pairs):
-        with open(HTML_FILENAME, "a") as fh:
+        with open(self.filename, "a") as fh:
             fh.write("<div class='clear colors'>\n")
             fh.write("<h2>%s</h2>\n" % desc)
 
@@ -803,7 +800,7 @@ $(document).ready(function()
 
     # @timed_function
     def write_colors(self, desc, squares):
-        with open(HTML_FILENAME, "a") as fh:
+        with open(self.filename, "a") as fh:
             squares_per_row = int(len(squares) / 6)
             fh.write("<div class='clear colors'>\n")
             fh.write("<h2>%s</h2>\n" % desc)
@@ -837,7 +834,7 @@ $(document).ready(function()
 
     # @timed_function
     def www_footer(self):
-        with open(HTML_FILENAME, "a") as fh:
+        with open(self.filename, "a") as fh:
             fh.write("""
 </body>
 </html>
@@ -854,9 +851,13 @@ $(document).ready(function()
         if self.write_debug_file:
             self.www_header()
 
-            with open(HTML_FILENAME, "a") as fh:
+            with open(self.filename, "a") as fh:
                 fh.write("<h1>RGB Input</h1>\n")
-                fh.write("<pre>{}</pre>\n".format(scan_data))
+                scan_data3 = "{\n"
+                for Key, Value in sorted(scan_data.items()):
+                    scan_data3 += f"\t{Key}: {Value},\n"
+                scan_data3 += "}"
+                fh.write("<pre>{}</pre>\n".format(scan_data3))
 
         self.calculate_pos2square()
 
@@ -924,11 +925,11 @@ $(document).ready(function()
         return "".join(html)
 
     def write_html(self, html):
-        with open(HTML_FILENAME, "a") as fh:
+        with open(self.filename, "a") as fh:
             fh.write(html)
 
     def _write_colors(self, desc, box):
-        with open(HTML_FILENAME, "a") as fh:
+        with open(self.filename, "a") as fh:
             fh.write("<div class='clear colors'>\n")
             fh.write("<h2>{}</h2>\n".format(desc))
 
@@ -1707,6 +1708,7 @@ def resolve_colors(argv):
     #width = int(sqrt(square_count_per_side))
 
     cube = RubiksColorSolverGeneric()
+    #cube.filename = "Report.html"
     cube.write_debug_file = True
     cube.enter_scan_data(scan_data)
     cube.crunch_colors()
