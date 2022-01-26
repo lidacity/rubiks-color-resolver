@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="rubiks_color_resolver",
-    version="1.0.0",
+    version="1.0.1",
     description="Resolve rubiks cube RGB values to the six cube colors",
     keywords="rubiks cube color",
     url="https://github.com/lidacity/rubiks-color-resolver",
