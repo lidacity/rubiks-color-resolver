@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+ div.clear { clear: both; }
+ div.clear_left { clear: left; }
+ div.side { margin: {{side_margin}}px; float: left; }
+ {% for x in range(1, size - 1): %}div.col{{x}},{% endfor %} div.col{{size - 1}} { float: left; }
+ div.col{{size}} { margin-left: {{(size - 1) * square_size}}px; }
+ div#upper, div#down { margin-left: {{(size * square_size) + (3 * side_margin)}}px; }
+ span.half_square { width: {{(square_size // 2)}}px; height: {{square_size}}px; white-space-collapsing: discard; display: inline-block; color: black; font-weight: bold; line-height: {{square_size}}px; text-align: center; }
+ span.square { width: {{square_size}}px; height: {{square_size}}px; white-space-collapsing: discard; display: inline-block; color: black; font-weight: bold; line-height: {{square_size}}px; text-align: center; }
+ div.square { width: {{square_size}}px; height: {{square_size}}px; color: black; font-weight: bold; line-height: {{square_size}}px; text-align: center; }
+ div.square span { display: inline-block; vertical-align: middle; line-height: normal; }
+ div#colormapping { float: left; }
+ div#bottom { cursor: pointer; }
+ div#bottom div.initial_rgb_values { display: none; }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function()
+{
+ $("div#bottom").click(function(event)
+ {
+  if ($("div#bottom div.final_cube").is(":visible")) {
+   $("div#bottom div.initial_rgb_values").show();
+   $("div#bottom div.final_cube").hide();
+  } else {
+   $("div#bottom div.initial_rgb_values").hide();
+   $("div#bottom div.final_cube").show();
+  }
+ })
+});
+</script>
+
+<title>Rubiks Cube Color Resolver</title>
+</head>
+<body>
+
+<h1>RGB Input</h1>
+ <pre>
+{
+{%- for Key, Value in scan_data.items()|sort: %}
+	{{Key}}: {{Value}},
+{%- endfor %}
+}
+ </pre>)
+<hr />
+
+<div class='cube {{init.div_class}}'>
+ <h1>{{init.desc}}</h1>
+{%- for side_index in init.side_index: %}
+{%- for Item in init.side_index[side_index]: %}
+{%- if Item.first_squares %}
+ <div class='side' id='{{side_index}}'>
+{%- endif %}
+  <div class='square col{{Item.col}}' title='{{Item.RGB}}; {{Item.Lab}}; {{Item.Name}}' style='background-color: #{{Item.color}};'><span>{{Item.index}}</span></div>
+{%- if Item.last_squares %}
+ </div>
+{%- if Item.last_UBD_squares %}
+ <div class='clear'></div>
+{%- endif %}
+{%- endif %}
+{%- endfor %}
+ </div>
+{%- endfor %}
+</div>
+<hr />
+
+<div class='clear colors'>
+ <h2>{{crayola.desc}}</h2>
+{%- for Item in crayola.color_name: %}
+ <span class='square' style='background-color:#{{Item.color}}' title='{{Item.RGB}}; {{Item.Lab}}; {{Item.Name}}'>{{Item.color_name}}</span>
+{%- endfor %}
+ <br />
+</div>
+<hr />
+
+<div class='clear colors'>
+ <h2>{{corner_color_box.desc}}</h2>
+{%- for Item in corner_color_box.squares: %}
+ <span class='square' style='background-color:#{{Item.color}}' title='{{Item.RGB}}; {{Item.Lab}}; {{Item.Name}}'>{{Item.position}}</span>
+{%- if Item.br: %}
+ <br />
+{%- endif %}
+{%- endfor %}
+</div>
+
+<div class='clear colors'>
+ <h2>{{color_box.desc}}</h2>
+{%- for Item in color_box.color_name: %}
+ <span class='square' style='background-color:#{{Item.color}}' title='{{Item.RGB}}; {{Item.Lab}}; {{Item.Name}}'>{{Item.color_name}}</span>
+{%- endfor %}
+ <br />
+</div>
+<hr />
+
+<div class='clear colors'>
+ <h2>{{corner_squares.desc}}</h2>
+{%- for Row in corner_squares.corners: %}
+{%- for Item in Row: %}
+{%- if Item.half_square: %}
+ <span class='half_square'></span>
+{%- endif %}
+ <span class='square' style='background-color:#{{Item.color}}' title='{{Item.RGB}}; {{Item.Lab}}; {{Item.Name}}'>{{Item.position}}</span>
+{%- endfor %}
+ <br />
+{%- endfor %}
+</div>
+<hr />
+
+<div class='clear colors'>
+ <h2>{{center_squares.desc}}</h2>
+{%- for Item in center_squares.squares: %}
+ <span class='square' style='background-color:#{{Item.color}}' title='{{Item.RGB}}; {{Item.Lab}}; {{Item.Name}}'>{{Item.position}}</span>
+{%- if Item.br: %}
+ <br />
+{%- endif %}
+{%- endfor %}
+</div>
+<hr />
+
+{% for Orbit in edge_squares: %}
+<div class='clear colors'>
+ <h2>{{Orbit.desc}}</h2>
+{%- for Pair in Orbit.square_pairs: %}
+{%- for Item in Pair: %}
+{%- if Item.half_square: %}
+ <span class='half_square'></span>
+{%- endif %}
+ <span class='square' style='background-color:#{{Item.color}}' title='{{Item.RGB}}; {{Item.Lab}}; {{Item.Name}}'>{{Item.position}}</span>
+{%- endfor %}
+<br />
+{%- endfor %}
+</div>
+{%- endfor %}
+<hr />
+
+<div class='cube {{final.div_class}}'>
+ <h1>{{final.desc}}</h1>
+{%- for side_index in final.side_index: %}
+{%- for Item in final.side_index[side_index]: %}
+{%- if Item.first_squares %}
+ <div class='side' id='{{side_index}}'>
+{%- endif %}
+  <div class='square col{{Item.col}}' title='{{Item.RGB}}; {{Item.Lab}}; {{Item.Name}}' style='background-color: #{{Item.color}};'><span>{{Item.index}}</span></div>
+{%- if Item.last_squares %}
+ </div>
+{%- if Item.last_UBD_squares %}
+ <div class='clear'></div>
+{%- endif %}
+{%- endif %}
+{%- endfor %}
+ </div>
+{%- endfor %}
+</div>
+<hr />
+
+<h3>DateTime</h3>
+<p>{{DateTime}}</p>
+<hr />
+
+
+</body>
+</html>

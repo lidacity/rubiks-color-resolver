@@ -11,6 +11,7 @@ $ sudo python3 -m pip install git+https://github.com/lidacity/rubiks-color-resol
 - remove micropython-support (sorry)
 - support only rubik's cube 3x3x3
 - one-letter color name
+- ninja2-report
 
 
 ## Overview
@@ -33,7 +34,7 @@ rubiks-color-resolver.py
 - analyzes all RGB values to assign each square one of the six colors of the cube. It then uses a Travelling Salesman algorithm (tsp_solver) to sort the colors.
 
 ```
-jdoe@laptop[rubiks-color-resolver]# ./rubiks-color-resolver.py --filename ./tests/test-data/3x3x3-tetris.txt
+./rubiks-color-resolver.py --filename ./tests/test-data/3x3x3-tetris.txt
 Cube
 
            OR OR Rd
@@ -47,5 +48,4 @@ Cube
            Rd OR OR
 
 FFBFUBFBBUDDURDUUDRLLRFLRRLBBFBDFBFFUDDULDUUDLRRLBRLLR
-jdoe@laptop[rubiks-color-resolver]#
 ```

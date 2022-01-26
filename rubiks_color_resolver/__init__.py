@@ -17,6 +17,9 @@ from rubiks_color_resolver.permutations import (
     odd_cube_center_color_permutations,
 )
 
+from jinja2 import Environment, FileSystemLoader
+import datetime
+
 # from rubiks_color_resolver.profile import timed_function, print_profile_data
 import sys
 
@@ -576,282 +579,115 @@ def square_list_to_lab(squares):
 class RubiksColorSolverGeneric(RubiksColorSolverGenericBase):
 
     filename = "rubiks-color-resolver.html"
+    ColorNames = {"B": "Blue", "G": "Green", "O": "Orange", "R": "Red", "W": "White", "Y": "Yellow"}
 
-    # @timed_function
-    def www_header(self):
-        """
-        Write the <head> including css
-        """
-        side_margin = 10
-        square_size = 40
-        size = self.width  # 3 for 3x3x3
-
-        with open(self.filename, "a") as fh:
-            fh.write(
-                """<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<style>
-div.clear {
-    clear: both;
-}
-
-div.clear_left {
-    clear: left;
-}
-
-div.side {
-    margin: %dpx;
-    float: left;
-}
-
-"""
-                % side_margin
-            )
-
-            for x in range(1, size - 1):
-                fh.write("div.col%d,\n" % x)
-
-            fh.write(
-                """div.col%d {
-    float: left;
-}
-
-div.col%d {
-    margin-left: %dpx;
-}
-div#upper,
-div#down {
-    margin-left: %dpx;
-}
-"""
-                % (
-                    size - 1,
-                    size,
-                    (size - 1) * square_size,
-                    (size * square_size) + (3 * side_margin),
-                )
-            )
-
-            fh.write(
-                """
-span.half_square {
-    width: %dpx;
-    height: %dpx;
-    white-space-collapsing: discard;
-    display: inline-block;
-    color: black;
-    font-weight: bold;
-    line-height: %dpx;
-    text-align: center;
-}
-
-span.square {
-    width: %dpx;
-    height: %dpx;
-    white-space-collapsing: discard;
-    display: inline-block;
-    color: black;
-    font-weight: bold;
-    line-height: %dpx;
-    text-align: center;
-}
-
-div.square {
-    width: %dpx;
-    height: %dpx;
-    color: black;
-    font-weight: bold;
-    line-height: %dpx;
-    text-align: center;
-}
-
-div.square span {
-  display:        inline-block;
-  vertical-align: middle;
-  line-height:    normal;
-}
-
-div#colormapping {
-    float: left;
-}
-
-div#bottom {
-    cursor: pointer;
-}
-
-div#bottom div.initial_rgb_values {
-    display: none;
-}
-</style>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script>
-$(document).ready(function()
-{
-    $("div#bottom").click(function(event)
-    {
-        if ($("div#bottom div.final_cube").is(":visible")) {
-            $("div#bottom div.initial_rgb_values").show();
-            $("div#bottom div.final_cube").hide();
-        } else {
-            $("div#bottom div.initial_rgb_values").hide();
-            $("div#bottom div.final_cube").show();
-        }
-    })
-});
-</script>
-
-
-<title>Rubiks Cube Color Resolver</title>
-</head>
-<body>
-"""
-                % (
-                    int(square_size / 2),
-                    square_size,
-                    square_size,
-                    square_size,
-                    square_size,
-                    square_size,
-                    square_size,
-                    square_size,
-                    square_size,
-                )
-            )
 
     def write_color_corners(self, desc, corners):
-        with open(self.filename, "a") as fh:
-            fh.write("<div class='clear colors'>\n")
-            fh.write("<h2>%s</h2>\n" % desc)
+        result = {}
+        result["desc"] = desc
+        result["corners"] = []
 
-            for row_index in range(3):
-                for (index, (corner0, corner1, corner2)) in enumerate(corners):
+        for row_index in range(3):
+            row = []
+            for (index, (corner0, corner1, corner2)) in enumerate(corners):
 
-                    if row_index == 0:
-                        square = corner0
-                    elif row_index == 1:
-                        square = corner1
-                    elif row_index == 2:
-                        square = corner2
-                    else:
-                        raise ValueError(row_index)
+                if row_index == 0:
+                    square = corner0
+                elif row_index == 1:
+                    square = corner1
+                elif row_index == 2:
+                    square = corner2
+                else:
+                    raise ValueError(row_index)
 
-                    (red, green, blue) = (
-                        square.lab.red,
-                        square.lab.green,
-                        square.lab.blue,
-                    )
+                (red, green, blue) = (
+                    square.lab.red,
+                    square.lab.green,
+                    square.lab.blue,
+                )
 
-                    if index and index % 2 == 0:
-                        fh.write("<span class='half_square'></span>")
+                item = {}
+                item["half_square"] = index and index % 2 == 0
 
-                    fh.write(
-                        "<span class='square' style='background-color:#%02x%02x%02x' title='RGB (%s, %s, %s), Lab (%s, %s, %s), color %s, side %s'>%s</span>\n"
-                        % (
-                            red,
-                            green,
-                            blue,
-                            red,
-                            green,
-                            blue,
-                            int(square.lab.L),
-                            int(square.lab.a),
-                            int(square.lab.b),
-                            square.color_name,
-                            square.side_name,
-                            square.position,
-                        )
-                    )
-                fh.write("<br>")
-            fh.write("</div>\n")
+                item["color"] = f"{red:0>2x}{green:0>2x}{blue:0>2x}"
+                item["RGB"] = f"RGB ({red}, {green}, {blue})"
+                item["Lab"] = f"Lab ({int(square.lab.L)}, {int(square.lab.a)}, {int(square.lab.b)})"
+                item["Name"] = f"Color ({self.ColorNames[square.color_name]})"
+                item["color_name"] = square.color_name
+                item["side_name"] = square.side_name #self.color_to_side_name[square.color_name]
+                #print(self.color_to_side_name)
+                item["position"] = square.position
+                row.append(item)
+            result["corners"].append(row)
+
+        return result
+
 
     def write_color_edge_pairs(self, desc, square_pairs):
-        with open(self.filename, "a") as fh:
-            fh.write("<div class='clear colors'>\n")
-            fh.write("<h2>%s</h2>\n" % desc)
+        result = {}
+        result["desc"] = desc
+        result["square_pairs"] = []
 
-            for use_square1 in (True, False):
-                for (index, (square1, square2)) in enumerate(square_pairs):
+        for use_square1 in (True, False):
+            pair = []
+            for (index, (square1, square2)) in enumerate(square_pairs):
 
-                    if use_square1:
-                        square = square1
-                    else:
-                        square = square2
+                if use_square1:
+                    square = square1
+                else:
+                    square = square2
 
-                    (red, green, blue) = (
-                        square.lab.red,
-                        square.lab.green,
-                        square.lab.blue,
-                    )
+                (red, green, blue) = (
+                    square.lab.red,
+                    square.lab.green,
+                    square.lab.blue,
+                )
 
-                    if index and index % 2 == 0:
-                        fh.write("<span class='half_square'></span>")
+                item = {}
+                item["half_square"] = index and index % 2 == 0
 
-                    fh.write(
-                        "<span class='square' style='background-color:#%02x%02x%02x' title='RGB (%s, %s, %s), Lab (%s, %s, %s), color %s, side %s'>%s</span>\n"
-                        % (
-                            red,
-                            green,
-                            blue,
-                            red,
-                            green,
-                            blue,
-                            int(square.lab.L),
-                            int(square.lab.a),
-                            int(square.lab.b),
-                            square.color_name,
-                            square.side_name,
-                            square.position,
-                        )
-                    )
-                fh.write("<br>")
-            fh.write("</div>\n")
+                item["color"] = f"{red:0>2x}{green:0>2x}{blue:0>2x}"
+                item["RGB"] = f"RGB ({red}, {green}, {blue})"
+                item["Lab"] = f"Lab ({int(square.lab.L)}, {int(square.lab.a)}, {int(square.lab.b)})"
+                item["Name"] = f"Color ({self.ColorNames[square.color_name]})"
+                item["side_name"] = square.side_name
+                item["position"] = square.position
+                pair.append(item)
+
+            result["square_pairs"].append(pair)
+
+        return result
+
 
     # @timed_function
     def write_colors(self, desc, squares):
-        with open(self.filename, "a") as fh:
-            squares_per_row = int(len(squares) / 6)
-            fh.write("<div class='clear colors'>\n")
-            fh.write("<h2>%s</h2>\n" % desc)
+        result = {}
+        squares_per_row = int(len(squares) / 6)
+        result["desc"] = desc
+        result["squares"] = []
 
-            count = 0
-            for square in squares:
-                (red, green, blue) = (square.lab.red, square.lab.green, square.lab.blue)
-                fh.write(
-                    "<span class='square' style='background-color:#%02x%02x%02x' title='RGB (%s, %s, %s), Lab (%s, %s, %s), color %s, side %s'>%d</span>\n"
-                    % (
-                        red,
-                        green,
-                        blue,
-                        red,
-                        green,
-                        blue,
-                        int(square.lab.L),
-                        int(square.lab.a),
-                        int(square.lab.b),
-                        square.color_name,
-                        square.side_name,
-                        square.position,
-                    )
-                )
+        count = 0
+        for square in squares:
+            item = {}
+            (red, green, blue) = (square.lab.red, square.lab.green, square.lab.blue)
+            item["color"] = f"{red:0>2x}{green:0>2x}{blue:0>2x}"
+            item["RGB"] = f"RGB ({red}, {green}, {blue})"
+            item["Lab"] = f"Lab ({int(square.lab.L)}, {int(square.lab.a)}, {int(square.lab.b)})"
+            item["Name"] = f"Color ({self.ColorNames[square.color_name]})"
+            item["side_name"] = square.side_name
+            item["position"] = square.position
 
-                count += 1
+            count += 1
 
-                if count % squares_per_row == 0:
-                    fh.write("<br>")
-            fh.write("</div>\n")
+            item["br"] = count % squares_per_row == 0
 
-    # @timed_function
-    def www_footer(self):
-        with open(self.filename, "a") as fh:
-            fh.write(
-                """
-</body>
-</html>
-"""
-            )
+            result["squares"].append(item)
+
+        return result
+
+
+    scan_data = None
+
 
     # @timed_function
     def enter_scan_data(self, scan_data):
@@ -861,18 +697,13 @@ $(document).ready(function()
             side = self.pos2side[position]
             side.set_square(position, red, green, blue)
 
-        if self.write_debug_file:
-            self.www_header()
 
-            with open(self.filename, "a") as fh:
-                fh.write("<h1>RGB Input</h1>\n")
-                scan_data3 = "{\n"
-                for Key, Value in sorted(scan_data.items()):
-                    scan_data3 += f"\t{Key}: {Value},\n"
-                scan_data3 += "}"
-                fh.write("<pre>{}</pre>\n".format(scan_data3))
+#            self.www_header()
+
+            self.scan_data = scan_data
 
         self.calculate_pos2square()
+
 
     # @timed_function
     def html_cube(self, desc, use_html_colors, div_class):
@@ -910,87 +741,67 @@ $(document).ready(function()
             self.width
         )
 
-        html = []
-        html.append("<div class='cube {}'>".format(div_class))
-        html.append("<h1>%s</h1>\n" % desc)
+        html = {}
+        html["div_class"] = div_class
+        html["desc"] = desc
+        html["side_index"] = {}
         for index in range(1, max_square + 1):
             if index in first_squares:
                 side_index += 1
-                html.append("<div class='side' id='%s'>\n" % sides[side_index])
+                html["side_index"][sides[side_index]] = []
 
             (red, green, blue, color_name, lab) = cube[index]
 
-            html.append(
-                "    <div class='square col%d' title='RGB (%d, %d, %d), Lab (%s, %s, %s), "
-                "color %s' style='background-color: #%02x%02x%02x;'><span>%02d</span></div>\n"
-                % (
-                    col,
-                    red,
-                    green,
-                    blue,
-                    int(lab.L),
-                    int(lab.a),
-                    int(lab.b),
-                    color_name,
-                    red,
-                    green,
-                    blue,
-                    index,
-                )
-            )
+            item = {}
+            item["col"] = col
+            item["RGB"] = f"RGB ({red}, {green}, {blue})"
+            item["Lab"] = f"Lab ({int(lab.L)}, {int(lab.a)}, {int(lab.b)})"
+            if color_name is not None:
+                item["Name"] = f"Color ({self.ColorNames[color_name]})"
+            item["color"] = f"{red:0>2x}{green:0>2x}{blue:0>2x}"
+            item["index"] = f"{index:0>2}"
+            item["last_UBD_squares"] = index in last_UBD_squares
+            item["first_squares"] = index in first_squares
+            item["last_squares"] = index in last_squares
 
-            if index in last_squares:
-                html.append("</div>\n")
-
-                if index in last_UBD_squares:
-                    html.append("<div class='clear'></div>\n")
+            html["side_index"][sides[side_index]].append(item)
 
             col += 1
 
             if col == self.width + 1:
                 col = 1
 
-        html.append("</div>")
-        return "".join(html)
+        return html
 
-    def write_html(self, html):
-        with open(self.filename, "a") as fh:
-            fh.write(html)
 
     def _write_colors(self, desc, box):
-        with open(self.filename, "a") as fh:
-            fh.write("<div class='clear colors'>\n")
-            fh.write("<h2>{}</h2>\n".format(desc))
+        result = {}
+        result["desc"] = desc
+        result["color_name"] = []
 
-            for color_name in ("W", "Y", "G", "B", "O", "R"):
-                lab = box[color_name]
+        for color_name in ("W", "Y", "G", "B", "O", "R"):
+            lab = box[color_name]
 
-                fh.write(
-                    "<span class='square' style='background-color:#%02x%02x%02x' title='RGB (%s, %s, %s), Lab (%s, %s, %s), color %s'>%s</span>\n"
-                    % (
-                        lab.red,
-                        lab.green,
-                        lab.blue,
-                        lab.red,
-                        lab.green,
-                        lab.blue,
-                        int(lab.L),
-                        int(lab.a),
-                        int(lab.b),
-                        color_name,
-                        color_name,
-                    )
-                )
-            fh.write("<br>")
-            fh.write("</div>\n")
+            item = {}
+            item["color"] = f"{lab.red:0>2x}{lab.green:0>2x}{lab.blue:0>2x}"
+            item["RGB"] = f"RGB ({lab.red}, {lab.green}, {lab.blue})"
+            item["Lab"] = f"Lab ({int(lab.L)}, {int(lab.a)}, {int(lab.b)})"
+            item["Name"] = f"Color ({self.ColorNames[color_name]})"
+            item["color_name"] = color_name
+            result["color_name"].append(item)
+
+        return result
+
 
     # @timed_function
     def write_crayola_colors(self):
-        self._write_colors("crayola box", crayola_colors)
+        return self._write_colors("crayola box", crayola_colors)
+
 
     # @timed_function
     def write_color_box(self):
-        self._write_colors("color_box", self.color_box)
+        return self._write_colors("color box", self.color_box)
+
 
     # @timed_function
     def set_state(self):
@@ -1036,7 +847,6 @@ $(document).ready(function()
                 else:
                     log.info("{} PERMUTATION {}, DISTANCE {}".format(desc, permutation, distance))
                     """
-
             self.color_to_side_name = {
                 min_distance_permutation[0]: "U",
                 min_distance_permutation[1]: "L",
@@ -1069,6 +879,7 @@ $(document).ready(function()
             for x in range(side.min_pos, side.max_pos + 1):
                 square = side.squares[x]
                 square.side_name = self.color_to_side_name[square.color_name]
+
 
     # @timed_function
     def cube_for_json(self):
@@ -1110,6 +921,7 @@ $(document).ready(function()
                 data["squares"][square.position] = {"finalSide": side_name}
 
         return data
+
 
     # @timed_function
     def assign_color_names(
@@ -1290,6 +1102,7 @@ $(document).ready(function()
             for square in squares_list:
                 square.color_name = color_name
 
+
     def get_squares_by_color_name(self):
         white_squares = []
         yellow_squares = []
@@ -1329,6 +1142,7 @@ $(document).ready(function()
             blue_squares,
         )
 
+
     # @timed_function
     def resolve_color_box(self):
         """
@@ -1358,14 +1172,13 @@ $(document).ready(function()
         sorted_corner_squares = traveling_salesman(corner_squares, "corner")
 
         self.assign_color_names(
-            "corner squares for color_box",
+            "corner squares for color box",
             sorted_corner_squares,
             "even_cube_center_color_permutations",
             crayola_colors,
         )
 
-        if self.write_debug_file:
-            self.write_colors("corners for color_box", sorted_corner_squares)
+        result = self.write_colors("corners for color box", sorted_corner_squares)
 
         (
             white_squares,
@@ -1398,8 +1211,10 @@ $(document).ready(function()
             for square in side.center_squares + side.corner_squares + side.edge_squares:
                 square.color_name = None
 
-        if self.write_debug_file:
-            self.write_color_box()
+        color_box = self.write_color_box()
+
+        return result, color_box
+
 
     # @timed_function
     def resolve_corner_squares(self):
@@ -1490,8 +1305,8 @@ $(document).ready(function()
             corner2[1].color_name = corner1[1].position
             corner2[2].color_name = corner1[2].position
 
-        if self.write_debug_file:
-            self.write_color_corners("corners", sorted_corners)
+        return self.write_color_corners("corners", sorted_corners)
+
 
     # @timed_function
     def resolve_edge_squares(self):
@@ -1550,6 +1365,8 @@ $(document).ready(function()
         red.color_name = "R"
         green.color_name = "G"
         blue.color_name = "B"
+
+        result = []
 
         for target_orbit_id in range(self.orbits):
             edge_pairs = []
@@ -1626,10 +1443,10 @@ $(document).ready(function()
                 pair2[0].color_name = pair1[0].position
                 pair2[1].color_name = pair1[1].position
 
-            if self.write_debug_file:
-                self.write_color_edge_pairs(
-                    "edges - orbit %d" % target_orbit_id, sorted_edge_pairs
-                )
+            item = self.write_color_edge_pairs("edges - orbit %d" % target_orbit_id, sorted_edge_pairs)
+            result.append(item)
+        return result
+
 
     # @timed_function
     def resolve_center_squares(self):
@@ -1659,32 +1476,28 @@ $(document).ready(function()
                 desc, sorted_center_squares, permutations, self.color_box
             )
 
-            if self.write_debug_file:
-                self.write_colors(desc, sorted_center_squares)
+            return self.write_colors(desc, sorted_center_squares)
+
 
     # @timed_function
     def crunch_colors(self):
-        if self.write_debug_file:
-            html_init_cube = self.html_cube(
-                "Initial RGB values", False, "initial_rgb_values"
-            )
-            self.write_html(html_init_cube)
-            self.write_crayola_colors()
+        html_init_cube = self.html_cube("Initial RGB values", False, "initial_rgb_values")
+        crayola = self.write_crayola_colors()
 
         gc.collect()
-        self.resolve_color_box()
+        corner_color_box, color_box = self.resolve_color_box()
 
-        # corners
+       # corners
         gc.collect()
-        self.resolve_corner_squares()
+        corner_squares = self.resolve_corner_squares()
 
         # centers
         gc.collect()
-        self.resolve_center_squares()
+        center_squares = self.resolve_center_squares()
 
         # edges
         gc.collect()
-        self.resolve_edge_squares()
+        edge_squares = self.resolve_edge_squares()
         gc.collect()
         self.set_state()
         gc.collect()
@@ -1695,12 +1508,16 @@ $(document).ready(function()
         self.validate_odd_cube_midge_vs_corner_parity()
         gc.collect()
 
-        if self.write_debug_file:
-            html_final_cube = self.html_cube("Final Cube", True, "final_cube")
-            html = "<div id='bottom'>{}{}</div>".format(html_init_cube, html_final_cube)
+        html_final_cube = self.html_cube("Final Cube", True, "final_cube")
 
-            self.write_html(html)
-            self.www_footer()
+        if self.write_debug_file:
+            Env = Environment(loader=FileSystemLoader(__name__))
+            Template = Env.get_template("report.html")
+            #scan_data = {int(key): self.scan_data[key] for key in self.scan_data.keys()}
+            HTML = Template.render(DateTime=datetime.datetime.now(), side_margin=10, square_size=40, size=self.width, scan_data=self.scan_data, init=html_init_cube, crayola=crayola, corner_color_box=corner_color_box, color_box=color_box, corner_squares=corner_squares, center_squares=center_squares, edge_squares=edge_squares, final=html_final_cube)
+            with open(self.filename, "w") as File:
+                File.write(HTML)
+
 
     def print_profile_data(self):
         # print_profile_data()
